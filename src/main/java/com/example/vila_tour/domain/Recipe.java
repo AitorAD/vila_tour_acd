@@ -14,9 +14,7 @@ import java.util.List;
 @Entity(name = "recipes")
 public class Recipe extends Article {
     @Column
-    private boolean isAprove;
-    @Column
-    private Ingredient ingredient;
+    private boolean isAproved;
 
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "recipe_ingredient",
