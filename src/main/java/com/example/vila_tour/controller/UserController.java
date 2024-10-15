@@ -1,4 +1,4 @@
 package com.example.vila_tour.controller;
 
-public class UsuarioController {
+public class UserController {
 }
