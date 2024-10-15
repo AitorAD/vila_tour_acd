@@ -11,6 +11,7 @@ import java.awt.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "article")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Article {
 
     @Id
