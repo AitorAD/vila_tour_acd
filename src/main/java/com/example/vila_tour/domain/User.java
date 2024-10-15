@@ -23,4 +23,11 @@ public class User {
     private String password;
     @Column
     private Role role;
+
+    @Override
+    public String toString(){
+        return  "ID: " + idUser + "\nNombre: " + username +
+        "\nEmail: " + email + "\nPassword: " + password +
+        "\nRole: " + role;
+    }
 }
