@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
+import static com.example.vila_tour.controller.Response.NOT_FOUND;
+
 @RequestMapping("/articles")
 @RestController
 public class ArticleController {
@@ -35,5 +37,14 @@ public class ArticleController {
     public ResponseEntity<Response> deleteArticle(@PathVariable("id") Long idArticle){
         articleService.findArticleById(idArticle);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Response>
+    handleException(ArticleNotFoundException pnfe) {
+        Response response = Response.errorResponse(NOT_FOUND, pnfe.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }
