@@ -18,7 +18,7 @@ public class Ingredient {
     @Column
     private long idIngredient;
 
-    @Column
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column
