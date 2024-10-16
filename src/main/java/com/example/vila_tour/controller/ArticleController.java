@@ -32,8 +32,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Article> deleteArticle(@PathVariable("id") Long idArticle){
+    public ResponseEntity<Response> deleteArticle(@PathVariable("id") Long idArticle){
         articleService.findArticleById(idArticle);
-        return new ResponseEntity<>(Response.noErrorresponse(), HttpStatus.OK);
+        return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 }

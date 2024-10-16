@@ -34,7 +34,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{idRecipe}")
-    public ResponseEntity<Recipe> getRecipe(@PathVariable int idRecipe) {
+    public ResponseEntity<Recipe> getRecipe(@PathVariable("idRecipe") int idRecipe) {
         Recipe recipe = recipeService.findByIdArticle(idRecipe)
                 .orElseThrow(() -> new RecipeNotFoundException(idRecipe));
 
@@ -48,13 +48,13 @@ public class RecipeController {
     }
 
     @PutMapping("/{idRecipe}")
-    public ResponseEntity<Recipe> modifyRecipe(@PathVariable int idRecipe, @RequestBody Recipe newRecipe) {
+    public ResponseEntity<Recipe> modifyRecipe(@PathVariable("idRecipe") int idRecipe, @RequestBody Recipe newRecipe) {
         Recipe recipe = recipeService.modifyRecipe(idRecipe, newRecipe);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{idRecipe}")
-    public ResponseEntity<Response> deleteRecipe(@PathVariable int idRecipe) {
+    public ResponseEntity<Response> deleteRecipe(@PathVariable("idRecipe") int idRecipe) {
         recipeService.deleteRecipe(idRecipe);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }

@@ -7,9 +7,11 @@ import java.time.LocalDate;
 
 public class FestivalsAndTraditions extends Article{
     @Column
-    private LocalDate datFestival;
+    private LocalDate startDate;
     @Column
-    private  Coordinate coordinate;
+    private LocalDate endDate;
+    @Column
+    private Coordinate coordinate;
 
     //TODO
 }
