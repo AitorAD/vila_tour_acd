@@ -1,6 +1,7 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.User;
+import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.exception.UserNotFoundException;
 import com.example.vila_tour.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(long id) {
-        if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
+        userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        userRepository.deleteById(id);
     }
 }
