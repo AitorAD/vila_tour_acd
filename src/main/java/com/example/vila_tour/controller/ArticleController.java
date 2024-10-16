@@ -2,7 +2,6 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.exception.ArticleNotFoundException;
-import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
