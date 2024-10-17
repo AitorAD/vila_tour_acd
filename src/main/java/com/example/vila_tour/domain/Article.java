@@ -17,7 +17,7 @@ public abstract class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idArticle;
-    @Column
+    @Column(name = "name", unique = true)
     private String nameArticle;
     @Column
     private String descriptionArticle;

@@ -29,8 +29,8 @@ public class IngredientServiceImpl implements IngredientService{
     }
 
     @Override
-    public Set<Ingredient> findIngredientByName(String name) {
-        return ingredientRepository.findIngredienteByName(name);
+    public Set<Ingredient> findIngredientsByNameLike(String name) {
+        return ingredientRepository.findIngredientsByNameLike(name);
     }
 
     @Override
@@ -52,7 +52,9 @@ public class IngredientServiceImpl implements IngredientService{
     }
 
     @Override
-    public void deleteIngredient(long id) {
-
+    public void deleteIngredient(long idIngrediente) {
+        ingredientRepository.findIngredientById(idIngrediente)
+                .orElseThrow(()-> new IngredientNotFoundException(idIngrediente));
+        ingredientRepository.deleteById(idIngrediente);
     }
 }

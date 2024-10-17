@@ -11,7 +11,7 @@ import java.util.Set;
 public interface IngredientService {
     Set<Ingredient> findAll();
     Optional<Ingredient> findIngredientById(long idIngredient);
-    Set<Ingredient> findIngredientByName(String name);
+    Set<Ingredient> findIngredientsByNameLike(String name);
     Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
 
     Ingredient addIngredient(Ingredient ingredient);
