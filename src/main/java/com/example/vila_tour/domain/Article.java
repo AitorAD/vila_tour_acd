@@ -10,14 +10,12 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "article")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "article_type")
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Usa TABLE_PER_CLASS
 public abstract class Article {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idArticle;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)// Esto es válido para TABLE_PER_CLASS
+    private Long idArticle;
     @Column(name = "name", unique = true)
     private String nameArticle;
     @Column

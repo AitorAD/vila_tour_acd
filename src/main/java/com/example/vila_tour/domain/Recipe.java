@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@DiscriminatorValue("RECIPE")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "recipes")

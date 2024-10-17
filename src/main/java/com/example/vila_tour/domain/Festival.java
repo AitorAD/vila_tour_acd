@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@DiscriminatorValue("FESTIVAL")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
