@@ -29,13 +29,14 @@ public class ArticleController {
     @GetMapping("/{id}")
     public ResponseEntity<Article> getArticle(@PathVariable("id") Long idArticle) {
         Article article = articleService.findArticleById(idArticle)
-                .orElseThrow(() -> new ArticleNotFoundException());
+                .orElseThrow(() -> new ArticleNotFoundException(idArticle));
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response> deleteArticle(@PathVariable("id") Long idArticle){
-        articleService.findArticleById(idArticle);
+        articleService.findArticleById(idArticle).orElseThrow(()-> new ArticleNotFoundException(idArticle));
+        articleService.deleteArticle(idArticle);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 

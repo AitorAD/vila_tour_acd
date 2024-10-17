@@ -18,7 +18,7 @@ public class FestivalController {
     private FestivalService festivalService;
 
     @GetMapping(value = "")
-    public ResponseEntity<Set<Festival>> getFestival() {
+    public ResponseEntity<Set<Festival>> getFestivals() {
         Set<Festival> festivals;
         festivals = festivalService.findAll();
         return new ResponseEntity<>(festivals, HttpStatus.OK);

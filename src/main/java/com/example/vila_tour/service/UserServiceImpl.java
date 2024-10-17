@@ -5,10 +5,12 @@ import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.exception.UserNotFoundException;
 import com.example.vila_tour.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

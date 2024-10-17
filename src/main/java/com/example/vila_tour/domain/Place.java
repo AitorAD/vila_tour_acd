@@ -1,14 +1,23 @@
 package com.example.vila_tour.domain;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import jakarta.persistence.Column;
+@DiscriminatorValue("PLACE")
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "places")
+public class Place extends Article {
 
-public class Place extends Article{
-   @Column
+   @Enumerated(EnumType.STRING) // Asumiendo que PlaceCategory es un enum
+   @Column(nullable = false) // Asegúrate de que no sea nulo
    private PlaceCategory placeCategory;
-   @Column
+
+   @Column(nullable = false) // Asegúrate de que no sea nulo
    private Coordinate coordinatesPlace;
 
-
-   //TODO
+   // Otros métodos y lógica pueden ir aquí si es necesario
 }

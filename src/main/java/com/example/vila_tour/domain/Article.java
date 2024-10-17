@@ -11,7 +11,8 @@ import java.awt.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "article")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "article_type")
 public abstract class Article {
 
     @Id
@@ -23,8 +24,8 @@ public abstract class Article {
     private String descriptionArticle;
     @Column
     private double averageScoreArticle;
-    @Column
-    private Image imageArticle;
+    /*@Column
+    private Image imageArticle;*/
 
     //TODO metodos
 }

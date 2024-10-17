@@ -15,6 +15,6 @@ public interface IngredientService {
     Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
 
     Ingredient addIngredient(Ingredient ingredient);
-    Ingredient modifyIngrediet(long id, Ingredient newIngredient);
+    Ingredient modifyIngredient(long id, Ingredient newIngredient); // Corrección aquí
     void deleteIngredient(long id);
 }

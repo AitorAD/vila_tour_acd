@@ -5,10 +5,12 @@ import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.repository.FestivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
 
+@Service
 public class FestivalServiceImpl implements FestivalService {
 
     @Autowired
@@ -33,12 +35,14 @@ public class FestivalServiceImpl implements FestivalService {
     public Festival modifyFestival(long id, Festival newFestival) {
         if (!festivalRepository.existsById(id)) {
             throw new FestivalNotFoundException(id);
-        } else {
-            Optional<Festival> festival = festivalRepository.findById(id);
-            assert festival.isPresent();
-            newFestival.setIdArticle(festival.get().getIdArticle());
-            return festivalRepository.save(newFestival);
         }
+
+        // Obtener el festival existente
+        Festival existingFestival = festivalRepository.findById(id)
+                .orElseThrow(() -> new FestivalNotFoundException(id)); // Manejo de excepciones
+
+        newFestival.setIdArticle(existingFestival.getIdArticle()); // Preservar el ID del artículo
+        return festivalRepository.save(newFestival); // Guardar el festival modificado
     }
 
     @Override

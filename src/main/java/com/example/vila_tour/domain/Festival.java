@@ -1,6 +1,7 @@
 package com.example.vila_tour.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,17 +10,19 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@DiscriminatorValue("FESTIVAL")
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "traditions")
-public class Festival extends Article{
+public class Festival extends Article {
     @Column
     private LocalDate startDate;
+
     @Column
     private LocalDate endDate;
-    @Column
-    private Coordinate coordinate;
 
+    @Column
+    private Coordinate coordinate; // Asegúrate de que 'Coordinate' sea embebido o serializable
 }

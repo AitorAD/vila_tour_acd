@@ -1,6 +1,5 @@
 package com.example.vila_tour.domain;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,14 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 @Entity(name = "ingredients")
 public class Ingredient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private long idIngredient;
 
     @Column(name = "name", unique = true)
     private String name;
 
+    @Enumerated(EnumType.STRING) // Asumiendo que CategoryIngredient es una enumeración
     @Column
     private CategoryIngredient category;
 

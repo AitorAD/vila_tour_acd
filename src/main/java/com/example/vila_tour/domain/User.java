@@ -22,6 +22,7 @@ public class User {
     private String username;
     @Column(name = "email", unique = true)
     private String email;
+    @JsonIgnore
     @Column
     private String password;
     @Column

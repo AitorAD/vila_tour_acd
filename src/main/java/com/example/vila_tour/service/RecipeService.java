@@ -2,21 +2,19 @@ package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
 
-@Service
 public interface RecipeService {
-    Set<Recipe> findAll();
-    Optional<Recipe> findByIdArticle(long id);
-    Set<Recipe> findByName(String name);
-    Set<Recipe> findByDescription(String description);
-    Set<Recipe> findByAverageScore(double averageScore);
-    Set<Recipe> findByIngredient(Ingredient ingredient);
+    Set<Recipe> findAllRecipes(); // Encuentra todas las recetas.
+    Optional<Recipe> findRecipeById(long id); // Encuentra una receta por su ID.
+    Set<Recipe> findRecipesByName(String name); // Encuentra recetas por nombre.
+    Set<Recipe> findRecipesByDescription(String description); // Encuentra recetas por descripción.
+    Set<Recipe> findRecipesByAverageScore(double averageScore); // Encuentra recetas por puntuación promedio.
+    Set<Recipe> findRecipesByIngredient(Ingredient ingredient); // Encuentra recetas por ingrediente.
 
-    Recipe addRecipe(Recipe recipe);
-    Recipe modifyRecipe(long id, Recipe newRecipe);
-    void deleteRecipe(long id);
+    Recipe addRecipe(Recipe recipe); // Agrega una nueva receta.
+    Recipe modifyRecipe(long id, Recipe newRecipe); // Modifica una receta existente.
+    void deleteRecipe(long id); // Elimina una receta por su ID.
 }

@@ -1,10 +1,11 @@
 package com.example.vila_tour.domain;
 
-import lombok.Data;
+import jakarta.persistence.Embeddable;
 
-@Data
+@Embeddable
 public class Coordinate {
-    private long latitude;
-    private long longitude;
+    private Double latitude;
+    private Double longitude;
 
+    // Getters y setters
 }
