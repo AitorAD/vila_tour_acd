@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Entity(name = "places")
 public class Place extends Article {
 
-   @Enumerated(EnumType.STRING) // Asumiendo que PlaceCategory es un enum
-   @Column(nullable = false) // Asegúrate de que no sea nulo
+   @Enumerated(EnumType.STRING)
+   @Column(nullable = false)
    private PlaceCategory placeCategory;
 
-   @Column(nullable = false) // Asegúrate de que no sea nulo
-   private Coordinate coordinatesPlace;
+   @Column(nullable = false)
+   private Coordinade coordinadesPlace;
 
    // Otros métodos y lógica pueden ir aquí si es necesario
 }

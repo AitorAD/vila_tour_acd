@@ -17,6 +17,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
 
+
     @Override
     public Set<Recipe> findAllRecipes() {
         return new HashSet<>(recipeRepository.findAll()); // Convertir la lista a un conjunto.
@@ -58,9 +59,8 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElseThrow(() -> new RecipeNotFoundException(id));
 
         // Actualiza solo los campos que deseas cambiar
-        recipe.setNameArticle(newRecipe.getNameArticle());
-        recipe.setDescriptionArticle(newRecipe.getDescriptionArticle());
-        recipe.setAverageScoreArticle(newRecipe.getAverageScoreArticle());
+        recipe.setName(newRecipe.getName());
+        recipe.setDescription(newRecipe.getDescription());
 
         return recipeRepository.save(recipe);
     }

@@ -41,7 +41,7 @@ public class FestivalServiceImpl implements FestivalService {
         Festival existingFestival = festivalRepository.findById(id)
                 .orElseThrow(() -> new FestivalNotFoundException(id)); // Manejo de excepciones
 
-        newFestival.setIdArticle(existingFestival.getIdArticle()); // Preservar el ID del artículo
+        newFestival.setId(existingFestival.getId()); // Preservar el ID del artículo
         return festivalRepository.save(newFestival); // Guardar el festival modificado
     }
 

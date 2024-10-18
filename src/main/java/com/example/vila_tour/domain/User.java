@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -27,6 +28,9 @@ public class User {
     private String password;
     @Column
     private Role role;
+
+    @ManyToMany(mappedBy = "reviewers", cascade = CascadeType.DETACH)
+    private List<Article> articlesReviewed = new ArrayList<>();
 
     @Override
     public String toString(){

@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -15,15 +17,22 @@ import java.awt.*;
 public abstract class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)// Esto es válido para TABLE_PER_CLASS
-    private Long idArticle;
-    @Column(name = "name", unique = true)
-    private String nameArticle;
+    private Long id;
+    @Column(unique = true)
+    private String name;
     @Column
-    private String descriptionArticle;
+    private String description;
     @Column
-    private double averageScoreArticle;
-    /*@Column
-    private Image imageArticle;*/
+    private String imagePath;
+    @Column
+    private double averageScore;
+
+    @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(name = "reviews",
+                joinColumns = {@JoinColumn(name = "id_article")},
+                inverseJoinColumns = {@JoinColumn(name = "id_user")})
+    private List<User> reviewers;
+
 
     //TODO metodos
 }

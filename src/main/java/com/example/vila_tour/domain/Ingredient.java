@@ -17,10 +17,10 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idIngredient;
 
-    @Column(name = "name", unique = true)
+    @Column(unique = true)
     private String name;
 
-    @Enumerated(EnumType.STRING) // Asumiendo que CategoryIngredient es una enumeración
+    @Enumerated(EnumType.STRING)
     @Column
     private CategoryIngredient category;
 
