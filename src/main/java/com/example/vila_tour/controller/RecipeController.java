@@ -39,6 +39,30 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
+    // Oobtener todas las recetas ordenadas por nombre
+    @GetMapping("/sorted")
+    public Set<Recipe> getRecipesSortedByName() {
+        return recipeService.findAllByOrderByName();
+    }
+
+    // Obtener todas las recetas ordenadas por nombre
+    @GetMapping("/sortedInverse")
+    public Set<Recipe> getRecipesSortedByNameReversed() {
+        return recipeService.findAllByOrderByNameDesc();
+    }
+
+    // Buscar recetas por nombre exacto y puntuación
+    @GetMapping("/search")
+    public Set<Recipe> searchRecipesByNameAndScore(@RequestParam String name, @RequestParam double score) {
+        return recipeService.findByNameAndAverageScore(name, score);
+    }
+
+    // Buscar recetas por nombre parcial
+    @GetMapping("/search/name")
+    public Set<Recipe> searchRecipesByNameContaining(@RequestParam String name) {
+        return recipeService.findByNameContaining(name);
+    }
+
     @PostMapping("")
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         Recipe addedRecipe = recipeService.addRecipe(recipe);

@@ -33,6 +33,6 @@ public abstract class Article {
                 inverseJoinColumns = {@JoinColumn(name = "id_user")})
     private List<User> reviewers;
 
-
     //TODO metodos
+
 }

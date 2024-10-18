@@ -30,22 +30,40 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Set<Recipe> findRecipesByName(String name) {
-        return recipeRepository.findByNameArticle(name);
+        return recipeRepository.findByName(name);
     }
 
     @Override
     public Set<Recipe> findRecipesByDescription(String description) {
-        return recipeRepository.findByDescriptionArticle(description);
+        return recipeRepository.findByDescription(description);
     }
 
     @Override
     public Set<Recipe> findRecipesByAverageScore(double averageScore) {
-        return recipeRepository.findByAverageScoreArticle(averageScore);
+        return recipeRepository.findByAverageScore(averageScore);
     }
 
     @Override
     public Set<Recipe> findRecipesByIngredient(Ingredient ingredient) {
         return recipeRepository.findByIngredients(ingredient);
+    }
+
+    @Override
+    public Set<Recipe> findAllByOrderByName() {
+        return recipeRepository.findAllByOrderByName();
+    }
+    @Override
+    public Set<Recipe> findAllByOrderByNameDesc() {
+        return recipeRepository.findAllByOrderByNameArticleDesc();
+    }
+    @Override
+    public Set<Recipe> findByNameAndAverageScore(String name, double averageScore) {
+        return recipeRepository.findByNameAndAverageScore(name, averageScore);
+    }
+    // TODO
+    @Override
+    public Set<Recipe> findByNameContaining(String name) {
+        return recipeRepository.findByNameArticleContaining(name);
     }
 
     @Override

@@ -20,5 +20,5 @@ public class Festival extends Article {
     @Column
     private LocalDate endDate;
     @Column
-    private Coordinade coordinade; // Asegúrate de que 'Coordinate' sea embebido o serializable
+    private Coordinade coordinade;
 }
