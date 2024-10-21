@@ -54,7 +54,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
     @Override
     public Set<Recipe> findAllByOrderByNameDesc() {
-        return recipeRepository.findAllByOrderByNameArticleDesc();
+        return recipeRepository.findAllByOrderByNameDesc();
     }
     @Override
     public Set<Recipe> findByNameAndAverageScore(String name, double averageScore) {

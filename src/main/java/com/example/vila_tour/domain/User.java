@@ -29,8 +29,8 @@ public class User {
     @Column
     private Role role;
 
-    @ManyToMany(mappedBy = "reviewers", cascade = CascadeType.DETACH)
-    private List<Article> articlesReviewed = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     @Override
     public String toString(){

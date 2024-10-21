@@ -27,11 +27,8 @@ public abstract class Article {
     @Column
     private double averageScore;
 
-    @ManyToMany(cascade = CascadeType.DETACH)
-    @JoinTable(name = "reviews",
-                joinColumns = {@JoinColumn(name = "id_article")},
-                inverseJoinColumns = {@JoinColumn(name = "id_user")})
-    private List<User> reviewers;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     //TODO metodos
 

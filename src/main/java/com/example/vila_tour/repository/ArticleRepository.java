@@ -13,7 +13,5 @@ import java.util.Set;
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
     Set<Article> findAll();
-
     Optional<Article> findById(long id);
-
 }
