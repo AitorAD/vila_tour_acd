@@ -16,10 +16,11 @@ import java.util.Set;
 @Repository
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
     Set<Ingredient> findAll();
-    Optional<Ingredient> findIngredientById(long idArticle);
+    Optional<Ingredient> findIngredientByIdIngredient(long idIngredient);
     Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
 
-    @Query(value = "SELECT * FROM ingredients WHERE name LIKE %nameIngredient%", nativeQuery = true)
-    Set<Ingredient> findIngredientsByNameLike(@Param("nameIngredient") String nameIngresdient);
+    @Query(value = "SELECT * FROM ingredients WHERE name LIKE %:nameIngredient%", nativeQuery = true)
+    Set<Ingredient> findIngredientsByNameLike(@Param("nameIngredient") String nameIngredient);
+
 }
 

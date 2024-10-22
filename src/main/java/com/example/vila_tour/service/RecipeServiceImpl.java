@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.HashSet;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -16,34 +17,53 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
 
+
     @Override
-    public Set<Recipe> findAll() {
-        return recipeRepository.findAll();
+    public Set<Recipe> findAllRecipes() {
+        return new HashSet<>(recipeRepository.findAll()); // Convertir la lista a un conjunto.
     }
 
     @Override
-    public Optional<Recipe> findByIdArticle(long id) {
+    public Optional<Recipe> findRecipeById(long id) {
         return recipeRepository.findById(id);
     }
 
     @Override
-    public Set<Recipe> findByName(String name) {
+    public Set<Recipe> findRecipesByName(String name) {
         return recipeRepository.findByName(name);
     }
 
     @Override
-    public Set<Recipe> findByDescription(String description) {
+    public Set<Recipe> findRecipesByDescription(String description) {
         return recipeRepository.findByDescription(description);
     }
 
     @Override
-    public Set<Recipe> findByAverageScore(double averageScore) {
+    public Set<Recipe> findRecipesByAverageScore(double averageScore) {
         return recipeRepository.findByAverageScore(averageScore);
     }
 
     @Override
-    public Set<Recipe> findByIngredient(Ingredient ingredient) {
-        return recipeRepository.findByIngredient(ingredient);
+    public Set<Recipe> findRecipesByIngredient(Ingredient ingredient) {
+        return recipeRepository.findByIngredients(ingredient);
+    }
+
+    @Override
+    public Set<Recipe> findAllByOrderByName() {
+        return recipeRepository.findAllByOrderByName();
+    }
+    @Override
+    public Set<Recipe> findAllByOrderByNameDesc() {
+        return recipeRepository.findAllByOrderByNameDesc();
+    }
+    @Override
+    public Set<Recipe> findByNameAndAverageScore(String name, double averageScore) {
+        return recipeRepository.findByNameAndAverageScore(name, averageScore);
+    }
+    // TODO
+    @Override
+    public Set<Recipe> findByNameContaining(String name) {
+        return recipeRepository.findByNameArticleContaining(name);
     }
 
     @Override
@@ -55,8 +75,12 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe modifyRecipe(long id, Recipe newRecipe) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new RecipeNotFoundException(id));
-        newRecipe.setIdArticle(recipe.getIdArticle());
-        return recipeRepository.save(newRecipe);
+
+        // Actualiza solo los campos que deseas cambiar
+        recipe.setName(newRecipe.getName());
+        recipe.setDescription(newRecipe.getDescription());
+
+        return recipeRepository.save(recipe);
     }
 
     @Override

@@ -5,26 +5,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "article")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Usa TABLE_PER_CLASS
 public abstract class Article {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idArticle;
-    @Column(name = "name", unique = true)
-    private String nameArticle;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)  // Esto es válido para TABLE_PER_CLASS
+    private Long id;
+    @Column(unique = true)
+    private String name;
     @Column
-    private String descriptionArticle;
+    private String description;
     @Column
-    private double averageScoreArticle;
+    private String imagePath;
     @Column
-    private Image imageArticle;
+    private double averageScore;
 
-    //TODO metodos
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
 }

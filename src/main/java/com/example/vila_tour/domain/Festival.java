@@ -13,13 +13,12 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "traditions")
-public class Festival extends Article{
+@Entity(name = "festivals")
+public class Festival extends Article {
     @Column
     private LocalDate startDate;
     @Column
     private LocalDate endDate;
     @Column
-    private Coordinate coordinate;
-
+    private Coordinade coordinade;
 }
