@@ -7,6 +7,7 @@ import com.example.vila_tour.repository.FestivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,13 +18,48 @@ public class FestivalServiceImpl implements FestivalService {
     private FestivalRepository festivalRepository;
 
     @Override
-    public Set<Festival> findAll() {
-        return festivalRepository.findAll();
+    public Set<Festival> findAllFestivals() {
+        return (Set<Festival>) festivalRepository.findAll();
     }
 
     @Override
-    public Optional<Festival> findById(long idFestival) {
-        return festivalRepository.findById(idFestival);
+    public Optional<Festival> findFestivalById(long id) {
+        return festivalRepository.findById(id);
+    }
+
+    @Override
+    public Set<Festival> findFestivalsByDescription(String description) {
+        return festivalRepository.findByDescription(description);
+    }
+
+    @Override
+    public Set<Festival> findFestivalsByAverageScore(double averageScore) {
+        return festivalRepository.findByAverageScore(averageScore);
+    }
+
+    @Override
+    public Set<Festival> findFestivalsByStartDate(LocalDate startDate) {
+        return festivalRepository.findByStartDate(startDate);
+    }
+
+    @Override
+    public Set<Festival> findAllByOrderByName() {
+        return festivalRepository.findAllByOrderByName();
+    }
+
+    @Override
+    public Set<Festival> findAllByOrderByNameDesc() {
+        return festivalRepository.findAllByOrderByNameDesc();
+    }
+
+    @Override
+    public Set<Festival> findByNameAndAverageScore(String name, double averageScore) {
+        return festivalRepository.findByNameAndAverageScore(name, averageScore);
+    }
+
+    @Override
+    public Set<Festival> findByNameContaining(String name) {
+        return festivalRepository.findByNameArticleContaining(name);
     }
 
     @Override
@@ -33,16 +69,11 @@ public class FestivalServiceImpl implements FestivalService {
 
     @Override
     public Festival modifyFestival(long id, Festival newFestival) {
-        if (!festivalRepository.existsById(id)) {
-            throw new FestivalNotFoundException(id);
-        }
+        Festival festival = festivalRepository.findById(id)
+                .orElseThrow(() -> new FestivalNotFoundException(id));
 
-        // Obtener el festival existente
-        Festival existingFestival = festivalRepository.findById(id)
-                .orElseThrow(() -> new FestivalNotFoundException(id)); // Manejo de excepciones
-
-        newFestival.setId(existingFestival.getId()); // Preservar el ID del artículo
-        return festivalRepository.save(newFestival); // Guardar el festival modificado
+        newFestival.setId(festival.getId());
+        return festivalRepository.save(newFestival);
     }
 
     @Override
