@@ -28,10 +28,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id);
     }
 
-    @Override
-    public Set<Recipe> findRecipesByName(String name) {
-        return recipeRepository.findByName(name);
-    }
 
     @Override
     public Set<Recipe> findRecipesByDescription(String description) {
