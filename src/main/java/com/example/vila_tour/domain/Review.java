@@ -21,5 +21,4 @@ public class Review {
     private long rating;
     private String comment;
 
-    // getters y setters
 }

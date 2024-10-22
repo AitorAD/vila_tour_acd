@@ -1,5 +1,6 @@
 package com.example.vila_tour.repository;
 
+import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,10 +23,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Set<Recipe> findByIngredients(Ingredient ingredient);
 
-    // Ordenar alfabéticamente
     Set<Recipe> findAllByOrderByName();  // Ascendente
 
-    // Cambiado para referenciar 'name' en lugar de 'nameArticle'
     Set<Recipe> findAllByOrderByNameDesc(); // Descendente
 
     // Buscar por nombre y puntuación

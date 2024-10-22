@@ -39,7 +39,7 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
-    // Oobtener todas las recetas ordenadas por nombre
+    // Obtener todas las recetas ordenadas por nombre
     @GetMapping("/sorted")
     public Set<Recipe> getRecipesSortedByName() {
         return recipeService.findAllByOrderByName();

@@ -16,7 +16,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Usa TABLE_PER_CLASS
 public abstract class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)// Esto es válido para TABLE_PER_CLASS
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)  // Esto es válido para TABLE_PER_CLASS
     private Long id;
     @Column(unique = true)
     private String name;
@@ -29,7 +29,5 @@ public abstract class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
-
-    //TODO metodos
 
 }
