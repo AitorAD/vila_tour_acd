@@ -28,10 +28,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id);
     }
 
-    @Override
-    public Set<Recipe> findRecipesByName(String name) {
-        return recipeRepository.findByName(name);
-    }
 
     @Override
     public Set<Recipe> findRecipesByDescription(String description) {
@@ -45,7 +41,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Set<Recipe> findRecipesByIngredient(Ingredient ingredient) {
-        return recipeRepository.findByIngredients(ingredient);
+        return recipeRepository.findByIngredient(ingredient);
+    }
+
+    @Override
+    public Set<Recipe> findRecipesByIngredients(Set<Ingredient> ingredients) {
+        if (ingredients == null || ingredients.isEmpty()) {
+            return new HashSet<>();
+        }
+        return recipeRepository.findByIngredientsIn(ingredients, ingredients.size());
     }
 
     @Override
@@ -60,7 +64,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Set<Recipe> findByNameAndAverageScore(String name, double averageScore) {
         return recipeRepository.findByNameAndAverageScore(name, averageScore);
     }
-    // TODO
+
     @Override
     public Set<Recipe> findByNameContaining(String name) {
         return recipeRepository.findByNameArticleContaining(name);

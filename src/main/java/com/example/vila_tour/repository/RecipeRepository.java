@@ -1,6 +1,5 @@
 package com.example.vila_tour.repository;
 
-import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.*;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,7 +21,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Set<Recipe> findByAverageScore(double averageScore);
 
-    Set<Recipe> findByIngredients(Ingredient ingredient);
+    Set<Recipe> findByIngredient(Ingredient ingredient);
 
     Set<Recipe> findAllByOrderByName();  // Ascendente
 
@@ -33,4 +33,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     // Buscar por que contenga el string en el nombre
     @Query("SELECT r FROM recipes r WHERE r.name LIKE %:nameArticle%")
     Set<Recipe> findByNameArticleContaining(@Param("nameArticle") String nameArticle);
+
+    @Query("SELECT r FROM Recipe r JOIN r.ingredients i WHERE i IN :ingredients GROUP BY r.id HAVING COUNT(i) = :ingredientCount")
+    Set<Recipe> findByIngredientsIn(@Param("ingredients") Set<Ingredient> ingredients, @Param("ingredientCount") long ingredientCount);
+
 }
