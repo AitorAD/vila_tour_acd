@@ -14,7 +14,6 @@ public interface RecipeService {
     Set<Recipe> findRecipesByDescription(String description); // Encuentra recetas por descripción.
     Set<Recipe> findRecipesByAverageScore(double averageScore); // Encuentra recetas por puntuación promedio.
     Set<Recipe> findRecipesByIngredient(Ingredient ingredient); // Encuentra recetas por ingrediente.
-    Set<Recipe> findRecipesByIngredients(Set<Ingredient> ingredients);
     Set<Recipe> findAllByOrderByName();  // Ascendente
     Set<Recipe> findAllByOrderByNameDesc(); // Descendente
     Set<Recipe> findByNameAndAverageScore(String name, double averageScore);

@@ -36,17 +36,15 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @Autowired
-    private IngredientService ingredientService; // Inyección del servicio de ingredientes
+    private IngredientService ingredientService;
 
     @Operation(summary = "Obtiene el listado de todas las recetas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado de recetas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("")
-    public ResponseEntity<Set<Recipe>> getRecipes(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description) {
-        Set<Recipe> recipes = recipeService.findAllRecipes(); // Filtrado opcional por nombre y descripción
+    @GetMapping(value = "", produces = "application/json")
+    public ResponseEntity<Set<Recipe>> getRecipes() {
+        Set<Recipe> recipes = recipeService.findAllRecipes();
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
@@ -56,7 +54,7 @@ public class RecipeController {
                     content = @Content(schema = @Schema(implementation = Recipe.class))),
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping("/{idRecipe}")
+    @GetMapping(value = "/{idRecipe}", produces = "application/json")
     public ResponseEntity<Recipe> getRecipe(@PathVariable("idRecipe") long idRecipe) {
         Recipe recipe = recipeService.findRecipeById(idRecipe)
                 .orElseThrow(() -> new RecipeNotFoundException(idRecipe));
@@ -67,7 +65,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas ordenadas por nombre",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/sorted")
+    @GetMapping(value = "/sorted", produces = "application/json")
     public Set<Recipe> getRecipesSortedByName() {
         return recipeService.findAllByOrderByName();
     }
@@ -76,7 +74,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas ordenadas por nombre en orden inverso",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/sortedInverse")
+    @GetMapping(value = "/sortedInverse", produces = "application/json")
     public Set<Recipe> getRecipesSortedByNameReversed() {
         return recipeService.findAllByOrderByNameDesc();
     }
@@ -85,7 +83,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search")
+    @GetMapping(value = "/search", produces = "application/json")
     public Set<Recipe> searchRecipesByNameAndScore(@RequestParam String name, @RequestParam double score) {
         return recipeService.findByNameAndAverageScore(name, score);
     }
@@ -94,34 +92,16 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search/name")
+    @GetMapping(value = "/search/name", produces = "application/json")
     public Set<Recipe> searchRecipesByNameContaining(@RequestParam String name) {
         return recipeService.findByNameContaining(name);
-    }
-
-    @Operation(summary = "Busca recetas por un conjunto de ingredientes")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recetas encontradas",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search/ingredients") // Buscar recetas por ingredientes
-    public ResponseEntity<Set<Recipe>> searchRecipesByIngredients(@RequestParam Set<Long> ingredientIds) {
-        Set<Ingredient> ingredients = new HashSet<>();
-        for (Long id : ingredientIds) {
-            Ingredient ingredient = ingredientService.findIngredientById(id).orElse(null);
-            if (ingredient != null) {
-                ingredients.add(ingredient);
-            }
-        }
-
-        Set<Recipe> recipes = recipeService.findRecipesByIngredients(ingredients);
-        return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
     @Operation(summary = "Busca recetas por descripción")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search/description")
+    @GetMapping(value = "/search/description", produces = "application/json")
     public ResponseEntity<Set<Recipe>> findRecipesByDescription(@RequestParam String description) {
         Set<Recipe> recipes = recipeService.findRecipesByDescription(description);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
@@ -131,7 +111,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search/score")
+    @GetMapping(value = "/search/score", produces = "application/json")
     public ResponseEntity<Set<Recipe>> findRecipesByAverageScore(@RequestParam double averageScore) {
         Set<Recipe> recipes = recipeService.findRecipesByAverageScore(averageScore);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
@@ -141,7 +121,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
-    @GetMapping("/search/ingredient")
+    @GetMapping(value = "/search/ingredient", produces = "application/json")
     public ResponseEntity<Set<Recipe>> findRecipesByIngredient(@RequestParam long ingredientId) {
         Ingredient ingredient = ingredientService.findIngredientById(ingredientId)
                 .orElseThrow(() -> new RecipeNotFoundException(ingredientId));
@@ -153,7 +133,7 @@ public class RecipeController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Receta agregada",
                     content = @Content(schema = @Schema(implementation = Recipe.class)))})
-    @PostMapping("")
+    @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         Recipe addedRecipe = recipeService.addRecipe(recipe);
         return new ResponseEntity<>(addedRecipe, HttpStatus.CREATED);
@@ -165,7 +145,7 @@ public class RecipeController {
                     content = @Content(schema = @Schema(implementation = Recipe.class))),
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @PutMapping("/{idRecipe}")
+    @PutMapping(value = "/{idRecipe}", produces = "application/json")
     public ResponseEntity<Recipe> modifyRecipe(@PathVariable("idRecipe") long idRecipe, @RequestBody Recipe newRecipe) {
         Recipe recipe = recipeService.modifyRecipe(idRecipe, newRecipe);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
@@ -177,7 +157,7 @@ public class RecipeController {
                     content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @DeleteMapping(value = "/{idRecipe}")
+    @DeleteMapping(value = "/{idRecipe}", produces = "application/json")
     public ResponseEntity<Response> deleteRecipe(@PathVariable("idRecipe") long idRecipe) {
         recipeService.deleteRecipe(idRecipe);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

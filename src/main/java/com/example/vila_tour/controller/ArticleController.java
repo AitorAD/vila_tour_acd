@@ -36,7 +36,7 @@ public class ArticleController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado de articulos",
             content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Article.class))))})
-    @GetMapping(value = "", produces = "articles/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<Set<Article>> getArticles(){
         Set<Article> articles = null;
         articles = articleService.findAllArticles();
@@ -49,7 +49,7 @@ public class ArticleController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El articulo no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/{id}", produces = "article/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Article> getArticle(@PathVariable("id") Long idArticle) {
         Article article = articleService.findArticleById(idArticle)
                 .orElseThrow(() -> new ArticleNotFoundException(idArticle));
@@ -63,7 +63,7 @@ public class ArticleController {
             @ApiResponse(responseCode = "404", description = "El producto no articulo",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @DeleteMapping(value = "/{id}", produces = "article/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Response> deleteArticle(@PathVariable("id") Long idArticle){
         articleService.findArticleById(idArticle).orElseThrow(()-> new ArticleNotFoundException(idArticle));
         articleService.deleteArticle(idArticle);

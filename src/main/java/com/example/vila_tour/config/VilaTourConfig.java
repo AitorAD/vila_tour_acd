@@ -1,4 +1,4 @@
-package com.example.vila_tour;
+package com.example.vila_tour.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
