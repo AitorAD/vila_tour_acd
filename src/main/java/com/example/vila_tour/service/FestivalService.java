@@ -1,9 +1,6 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.Festival;
-import com.example.vila_tour.domain.Ingredient;
-import com.example.vila_tour.domain.Recipe;
-import com.example.vila_tour.domain.User;
 
 import java.time.LocalDate;
 import java.util.Optional;

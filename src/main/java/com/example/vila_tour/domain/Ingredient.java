@@ -1,5 +1,6 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,5 +35,6 @@ public class Ingredient {
     private CategoryIngredient category;
 
     @ManyToMany(cascade = CascadeType.DETACH, mappedBy = "ingredients")
+    @JsonIgnore
     private List<Recipe> recipes;
 }

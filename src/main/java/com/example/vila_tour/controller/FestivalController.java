@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import java.util.Set;
  */
 @RequestMapping("/festivals")
 @RestController
+@Tag(name = "Festivals", description = "Catálogo de festivales y tradiciones")
 public class FestivalController {
 
     @Autowired
@@ -38,10 +40,9 @@ public class FestivalController {
                     responseCode = "200",
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
-    @GetMapping(value = "", produces = "articles/json")
+    @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivals() {
-        Set<Festival> festivals;
-        festivals = festivalService.findAllFestivals();
+        Set<Festival> festivals = festivalService.findAllFestivals();
         return new ResponseEntity<>(festivals, HttpStatus.OK);
     }
 
@@ -51,7 +52,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/{id}", produces = "articles/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Festival> getFestival(@PathVariable long id){
         Festival festival = festivalService.findFestivalById(id)
                 .orElseThrow(() -> new FestivalNotFoundException(id));
@@ -65,7 +66,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/search/description", produces = "articles/json")
+    @GetMapping(value = "/search/description", produces = "application/json")
     public ResponseEntity<Set<Festival>> findFestivalsByDescription(@RequestParam String description) {
         Set<Festival> festivals = festivalService.findFestivalsByDescription(description);
         return new ResponseEntity<>(festivals, HttpStatus.OK);
@@ -77,7 +78,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/search/score", produces = "articles/json")
+    @GetMapping(value = "/search/score", produces = "application/json")
     public ResponseEntity<Set<Festival>> findFestivalsByAverageScore(@RequestParam double averageScore) {
         Set<Festival> festivals = festivalService.findFestivalsByAverageScore(averageScore);
         return new ResponseEntity<>(festivals, HttpStatus.OK);
@@ -89,7 +90,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/search/startDate", produces = "articles/json")
+    @GetMapping(value = "/search/startDate", produces = "application/json")
     public ResponseEntity<Set<Festival>> findFestivalsByStartDate(@RequestParam String startDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
@@ -103,7 +104,7 @@ public class FestivalController {
                     responseCode = "200",
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
-    @GetMapping(value = "/sorted", produces = "articles/json")
+    @GetMapping(value = "/sorted", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivalsSortedByName() {
         Set<Festival> festivals;
         festivals = festivalService.findAllByOrderByName();
@@ -116,7 +117,7 @@ public class FestivalController {
                     responseCode = "200",
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
-    @GetMapping(value = "/sortedInverse", produces = "articles/json")
+    @GetMapping(value = "/sortedInverse", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivalsSortedByNameInverse() {
         Set<Festival> festivals;
         festivals = festivalService.findAllByOrderByNameDesc();
@@ -129,7 +130,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "", produces = "articles/json")
+    @GetMapping(value = "/search/name_score", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivalsByNameAndAverageScore(
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "averageScore", defaultValue = "-1") double averageScore) {
@@ -145,7 +146,7 @@ public class FestivalController {
                     content = @Content(schema =  @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "", produces = "articles/json")
+    @GetMapping(value = "/search/name", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivalsByNameContaining(
             @RequestParam(value = "name", defaultValue = "") String name) {
 
@@ -161,7 +162,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "400", description = "Solicitud no válida, el festival no pudo añadirse",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @PostMapping(value = "", produces = "articles/json")
+    @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<Festival> addFestival(@RequestBody Festival festival){
         Festival addedFestival = festivalService.addFestival(festival);
         return new ResponseEntity<>(addedFestival, HttpStatus.OK);
@@ -176,7 +177,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "400", description = "Solicitud no válida",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @PutMapping(value = "/{id}", produces = "articles/json")
+    @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Festival> modifyFestival(@PathVariable long id, @RequestBody Festival newFestival){
         Festival festival = festivalService.modifyFestival(id, newFestival);
         return new ResponseEntity<>(newFestival,HttpStatus.OK);
@@ -189,7 +190,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "Festival no encontrado",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @DeleteMapping(value = "/{id}", produces = "articles/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Response> deleteFestival(@PathVariable long id){
         festivalService.deleteFestival(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

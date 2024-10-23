@@ -41,16 +41,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Set<Recipe> findRecipesByIngredient(Ingredient ingredient) {
-        return recipeRepository.findByIngredient(ingredient);
+        return recipeRepository.findByIngredients(ingredient);
     }
 
-    @Override
-    public Set<Recipe> findRecipesByIngredients(Set<Ingredient> ingredients) {
-        if (ingredients == null || ingredients.isEmpty()) {
-            return new HashSet<>();
-        }
-        return recipeRepository.findByIngredientsIn(ingredients, ingredients.size());
-    }
 
     @Override
     public Set<Recipe> findAllByOrderByName() {

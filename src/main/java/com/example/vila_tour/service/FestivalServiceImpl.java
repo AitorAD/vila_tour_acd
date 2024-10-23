@@ -2,12 +2,12 @@ package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.Festival;
 import com.example.vila_tour.exception.FestivalNotFoundException;
-import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.repository.FestivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class FestivalServiceImpl implements FestivalService {
 
     @Override
     public Set<Festival> findAllFestivals() {
-        return (Set<Festival>) festivalRepository.findAll();
+        return new HashSet<>(festivalRepository.findAll());
     }
 
     @Override

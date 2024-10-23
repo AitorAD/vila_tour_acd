@@ -16,6 +16,8 @@ import java.util.Set;
 @Repository
 public interface FestivalRepository extends CrudRepository<Festival, Long> {
 
+    Set<Festival> findAll();
+
     Optional<Festival> findById(long id);
 
     Set<Festival> findByDescription(String description);
