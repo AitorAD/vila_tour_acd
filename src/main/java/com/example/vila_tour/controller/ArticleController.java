@@ -47,7 +47,7 @@ public class ArticleController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Existe el articulo",
                     content = @Content(schema =  @Schema(implementation = Article.class))),
-            @ApiResponse(responseCode = "404", description = "El producto no existe",
+            @ApiResponse(responseCode = "404", description = "El articulo no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "article/json")
     public ResponseEntity<Article> getArticle(@PathVariable("id") Long idArticle) {

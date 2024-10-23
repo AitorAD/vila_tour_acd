@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // Usa TABLE_PER_CLASS
 public abstract class Article {
-    @Schema(description = "identificador del articulo", example = "1", required = true)
+    @Schema(description = "Identificador del articulo", example = "1", required = true)
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)  // Esto es válido para TABLE_PER_CLASS
     private Long id;
