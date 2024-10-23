@@ -28,10 +28,6 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id);
     }
 
-    @Override
-    public Set<Recipe> findRecipesByName(String name) {
-        return recipeRepository.findByName(name);
-    }
 
     @Override
     public Set<Recipe> findRecipesByDescription(String description) {
@@ -48,6 +44,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findByIngredients(ingredient);
     }
 
+
     @Override
     public Set<Recipe> findAllByOrderByName() {
         return recipeRepository.findAllByOrderByName();
@@ -60,7 +57,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Set<Recipe> findByNameAndAverageScore(String name, double averageScore) {
         return recipeRepository.findByNameAndAverageScore(name, averageScore);
     }
-    // TODO
+
     @Override
     public Set<Recipe> findByNameContaining(String name) {
         return recipeRepository.findByNameArticleContaining(name);

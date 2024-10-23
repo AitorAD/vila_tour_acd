@@ -1,6 +1,5 @@
 package com.example.vila_tour.repository;
 
-import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +32,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     // Buscar por que contenga el string en el nombre
     @Query("SELECT r FROM recipes r WHERE r.name LIKE %:nameArticle%")
     Set<Recipe> findByNameArticleContaining(@Param("nameArticle") String nameArticle);
+
 }
