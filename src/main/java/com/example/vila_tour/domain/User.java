@@ -1,6 +1,5 @@
 package com.example.vila_tour.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,15 +18,21 @@ public class User {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long idUser;
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
     @JsonIgnore
-    @Column
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column
+    @Column(name = "rol", nullable = false)
     private Role role;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "surname")
+    private String surname;
+    @Column(name = "profilePicture")
+    private String profilePicture;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
@@ -35,7 +40,6 @@ public class User {
     @Override
     public String toString(){
         return  "ID: " + idUser + "\nNombre: " + username +
-        "\nEmail: " + email + "\nPassword: " + password +
-        "\nRole: " + role;
+        "\nEmail: " + email + "\nRole: " + role;
     }
 }
