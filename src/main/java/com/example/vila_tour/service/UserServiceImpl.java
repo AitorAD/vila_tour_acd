@@ -27,28 +27,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> findByUsername(String username){
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public Set<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
     public Set<User> findByRole(Role role){
         return userRepository.findByRole(role);
-    }
-
-    @Override
-    public Set<User> findByName(String name){
-        return userRepository.findByName(name);
-    }
-
-    @Override
-    public Set<User> findBySurname(String surname) {
-        return userRepository.findBySurname(surname);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.vila_tour.repository;
 
-import com.example.vila_tour.domain.Festival;
 import com.example.vila_tour.domain.Role;
 import com.example.vila_tour.domain.User;
 import org.springframework.data.jpa.repository.Query;
