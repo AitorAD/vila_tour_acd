@@ -1,5 +1,6 @@
 package com.example.vila_tour.domain;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Embeddable
 public class ReviewId implements Serializable {
 
     private long articleId;

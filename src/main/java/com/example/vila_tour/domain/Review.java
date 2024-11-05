@@ -1,7 +1,16 @@
 package com.example.vila_tour.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode
+@Data
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "article_id"})})
 public class Review {
 
@@ -20,5 +29,6 @@ public class Review {
 
     private long rating;
     private String comment;
-
+    private LocalDateTime postDate;
+    private boolean favorite;
 }
