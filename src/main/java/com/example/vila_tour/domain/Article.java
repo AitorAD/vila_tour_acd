@@ -30,9 +30,9 @@ public abstract class Article {
     @Schema(description = "Descripcion del articulo", example = "La mejor receta")
     @Column
     private String description;
-    @Schema(description = "Ruta de la imagen de la receta", example = "https://imagen.es")
+    @Schema(description = "Ruta de las imagenes dela rtículo", example = "[https://imagen1.es, https://imagen1.es]")
     @Column
-    private String imagePath;
+    private List<String> imagensPaths;
     @Schema(description = "Puntuacion media del articulo", example = "4,5", defaultValue = "0.00")
     @Column
     private double averageScore;
