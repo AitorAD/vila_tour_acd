@@ -13,26 +13,22 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Set<User> findAll();
-    Optional<User> findById();
-    Set<User> findByUsername(String username);
-    Set<User> findByEmail(String email);
+    Optional<User> findById(long id);
     Set<User> findByRole(Role role);
-    Set<User> findByName(String name);
-    Set<User> findBySurname(String surname);
 
     // Buscar por que contenga el string en el username
-    @Query("SELECT u FROM users u WHERE u.username LIKE %:usernameUser%")
-    Set<User> findByUsernameContaining(@Param("usernameUser") String userName);
+    @Query("SELECT u FROM user u WHERE u.username LIKE %:username%")
+    Set<User> findByUsernameContaining(@Param("username") String userName);
 
     // Buscar por que contenga el string en el email
-    @Query("SELECT u FROM users u WHERE u.email LIKE %:emailUser%")
-    Set<User> findByEmailContaining(@Param("emailUser") String email);
+    @Query("SELECT u FROM user u WHERE u.email LIKE %:email%")
+    Set<User> findByEmailContaining(@Param("email") String email);
 
     // Buscar por que contenga el string en el name
-    @Query("SELECT u FROM users u WHERE u.name LIKE %:nameUser%")
-    Set<User> findByNameContaining(@Param("nameUser") String name);
+    @Query("SELECT u FROM user u WHERE u.name LIKE %:name%")
+    Set<User> findByNameContaining(@Param("name") String name);
 
     // Buscar por que contenga el string en el apellidos
-    @Query("SELECT u FROM users u WHERE u.surname LIKE %:surnameUser%")
-    Set<User> findBySurnameContaining(@Param("surnameUser") String surname);
+    @Query("SELECT u FROM user u WHERE u.surname LIKE %:surname%")
+    Set<User> findBySurnameContaining(@Param("surname") String surname);
 }
