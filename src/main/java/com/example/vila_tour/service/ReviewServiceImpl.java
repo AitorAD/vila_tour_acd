@@ -1,7 +1,9 @@
 package com.example.vila_tour.service;
 
+import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Review;
 import com.example.vila_tour.domain.ReviewId;
+import com.example.vila_tour.domain.User;
 import com.example.vila_tour.exception.ReviewNotFoundException;
 import com.example.vila_tour.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,23 +18,28 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     @Override
+    public Set<Review> findAll() {
+        return reviewRepository.findAll();
+    }
+
+    @Override
     public Set<Review> findByRatingAndArticle(long rating, long idArticle) {
         return reviewRepository.findByRatingAndArticle(rating, idArticle);
     }
 
     @Override
-    public Set<Review> findByRatingAndUser(long rating, long idUser) {
-        return reviewRepository.findByRatingAndUser(rating, idUser);
+    public Set<Review> findByRatingAndUser(long rating, long userId) {
+        return reviewRepository.findByRatingAndUser(rating, userId);
     }
 
     @Override
-    public Set<Review> findByArticle(long idArticle) {
-        return reviewRepository.findByArticle(idArticle);
+    public Set<Review> findByArticle(long articleId) {
+        return reviewRepository.findByArticle(articleId);
     }
 
     @Override
-    public Set<Review> findByUser(long idUser) {
-        return reviewRepository.findByUser(idUser);
+    public Set<Review> findByUser(long userId) {
+        return reviewRepository.findByUser(userId);
     }
 
     @Override

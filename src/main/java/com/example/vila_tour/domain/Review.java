@@ -1,5 +1,6 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,11 +21,13 @@ public class Review {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @MapsId("articleId")
     @JoinColumn(name = "article_id", nullable = false)
+    @JsonIgnore
     private Article article;
 
     private long rating;
