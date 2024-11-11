@@ -1,6 +1,7 @@
 package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.Review;
+import com.example.vila_tour.domain.ReviewId;
 import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,12 +24,6 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
-
-    /*
-
-    Review modifiyReview(ReviewId id, Review newReview);
-    void deleteReview(ReviewId id);
-     */
 
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<Set<Review>> findByRatingAndArticle(
@@ -67,7 +62,7 @@ public class ReviewController {
     @Operation(summary = "Añade una nueva review")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Review añadido exitosamente",
-                    content = @Content(schema = @Schema(implementation = Festival.class))),
+                    content = @Content(schema = @Schema(implementation = Review.class))),
             @ApiResponse(responseCode = "400", description = "Solicitud no válida, la review no pudo añadirse",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
@@ -77,32 +72,31 @@ public class ReviewController {
         return new ResponseEntity<>(addedReview, HttpStatus.OK);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
     @Operation(summary = "Modifica una review existente")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Review modificado exitosamente",
-                    content = @Content(schema = @Schema(implementation = Festival.class))),
+            @ApiResponse(responseCode = "200", description = "Review modificada exitosamente",
+                    content = @Content(schema = @Schema(implementation = Review.class))),
             @ApiResponse(responseCode = "404", description = "Review no encontrada",
                     content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "400", description = "Solicitud no válida",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Festival> modifyReview(@PathVariable long id, @RequestBody Festival newFestival){
-        Festival festival = festivalService.modifyFestival(id, newFestival);
-        return new ResponseEntity<>(newFestival,HttpStatus.OK);
+    public ResponseEntity<Review> modifyReview(@PathVariable ReviewId id, @RequestBody Review newReview){
+        Review review = reviewService.modifyReview(id, newReview);
+        return new ResponseEntity<>(newReview,HttpStatus.OK);
     }
 
-    @Operation(summary = "Elimina un festival por su ID")
+    @Operation(summary = "Elimina una review por su ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Festival eliminado exitosamente",
+            @ApiResponse(responseCode = "200", description = "Review eliminado exitosamente",
                     content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "404", description = "Festival no encontrado",
+            @ApiResponse(responseCode = "404", description = "Review no encontrado",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Response> deleteFestival(@PathVariable long id){
-        festivalService.deleteFestival(id);
+    public ResponseEntity<Response> deleteReview(@PathVariable ReviewId id){
+        reviewService.deleteReview(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 

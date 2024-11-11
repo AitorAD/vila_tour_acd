@@ -11,6 +11,6 @@ public interface ReviewService {
     Set<Review> findByArticle(long idArticle);
     Set<Review> findByUser(long idUser);
     Review addReview(Review review);
-    Review modifiyReview(ReviewId id, Review newReview);
+    Review modifyReview(ReviewId id, Review newReview);
     void deleteReview(ReviewId id);
 }
