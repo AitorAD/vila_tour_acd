@@ -16,17 +16,17 @@ public interface ReviewRepository extends CrudRepository<Review, ReviewId> {
 
     Set<Review> findAll();
 
-    @Query("SELECT r FROM Review r WHERE r.article.id = :articleId AND r.rating = :rating")
-    Set<Review> findByRatingAndArticle(@Param("rating") long rating, @Param("articleId") long articleId);
+    @Query(value = "SELECT * FROM Review WHERE article_id = :article_id AND rating = :rating", nativeQuery = true)
+    Set<Review> findByRatingAndArticle(@Param("rating") long rating, @Param("article_id") long articleId);
 
-    Optional<Review> findById(ReviewId id);
-
-    @Query("SELECT r FROM Review r WHERE r.user.id = :userId AND r.rating = :rating")
+    @Query(value = "SELECT * FROM Review WHERE user_id = :userId AND rating = :rating", nativeQuery = true)
     Set<Review> findByRatingAndUser(@Param("rating") long rating, @Param("userId") long userId);
 
-    @Query("SELECT r FROM Review r WHERE r.article.id = :articleId")
+    @Query(value = "SELECT * FROM Review WHERE article_id = :articleId", nativeQuery = true)
     Set<Review> findByArticle(@Param("articleId") long articleId);
 
-    @Query("SELECT r FROM Review r WHERE r.user.id = :userId")
+    @Query(value = "SELECT * FROM Review WHERE user_id = :userId", nativeQuery = true)
     Set<Review> findByUser(@Param("userId") long userId);
+
+    Optional<Review> findById(ReviewId id);
 }

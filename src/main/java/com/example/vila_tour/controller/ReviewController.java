@@ -47,8 +47,8 @@ public class ReviewController {
     })
     @GetMapping(value = "/byRatingAndArticle", produces = "application/json")
     public ResponseEntity<Set<Review>> findByRatingAndArticle(
-            @RequestParam(value = "rating", defaultValue = "0") long rating,
-            @RequestParam(value = "idArticle", defaultValue = "0") long idArticle) {
+            @RequestParam(value = "rating", defaultValue = "-1") long rating,
+            @RequestParam(value = "idArticle", defaultValue = "-1") long idArticle) {
         Set<Review> reviews = reviewService.findByRatingAndArticle(rating, idArticle);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
@@ -62,8 +62,8 @@ public class ReviewController {
     })
     @GetMapping(value = "/byRatingAndUser", produces = "application/json")
     public ResponseEntity<Set<Review>> findByRatingAndUser(
-            @RequestParam(value = "rating", defaultValue = "0") long rating,
-            @RequestParam(value = "idUser", defaultValue = "0") long idUser) {
+            @RequestParam(value = "rating", defaultValue = "-1") long rating,
+            @RequestParam(value = "idUser", defaultValue = "-1") long idUser) {
         Set<Review> reviews = reviewService.findByRatingAndUser(rating, idUser);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }

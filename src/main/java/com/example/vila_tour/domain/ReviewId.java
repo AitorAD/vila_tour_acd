@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Embeddable
 public class ReviewId implements Serializable {
 
-    private long articleId;
-    private long userId;
+    private long article_id;
+    private long user_id;
 
 }

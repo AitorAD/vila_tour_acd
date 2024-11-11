@@ -19,13 +19,13 @@ public class Review {
     private ReviewId id;
 
     @ManyToOne
-    @MapsId("userId")
+    @MapsId("user_id")
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 
     @ManyToOne
-    @MapsId("articleId")
+    @MapsId("article_id")
     @JoinColumn(name = "article_id", nullable = false)
     @JsonIgnore
     private Article article;
