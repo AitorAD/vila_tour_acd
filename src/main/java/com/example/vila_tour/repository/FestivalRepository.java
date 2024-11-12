@@ -1,9 +1,6 @@
 package com.example.vila_tour.repository;
 
 import com.example.vila_tour.domain.Festival;
-import com.example.vila_tour.domain.Ingredient;
-import com.example.vila_tour.domain.Recipe;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

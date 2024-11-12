@@ -1,5 +1,6 @@
 package com.example.vila_tour.service;
 
+import com.example.vila_tour.domain.Role;
 import com.example.vila_tour.domain.User;
 
 import java.util.Optional;
@@ -9,6 +10,13 @@ public interface UserService {
 
     Set<User> findAll();
     Optional<User> findById(long idUser);
+    Set<User> findByRole(Role role);
+    Set<User> findByUsernameContaining(String username);
+    Set<User> findByEmailContaining(String email);
+    Set<User> findByNameContaining(String name);
+    Set<User> findBySurnameContaining(String surname);
+
+
     User addUser(User user);
     User modifyUser(long id, User newUser);
     void deleteUser(long id);
