@@ -96,7 +96,7 @@ public class ReviewController {
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
-    @Operation(summary = "Añadir una nueva review")
+    @Operation(summary = "Añade una nueva review o modifica una existente")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Review añadida exitosamente",
                     content = @Content(schema = @Schema(implementation = Review.class))),
@@ -109,21 +109,6 @@ public class ReviewController {
         return new ResponseEntity<>(addedReview, HttpStatus.OK);
     }
 
-    @Operation(summary = "Modificar una review existente")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Review modificada exitosamente",
-                    content = @Content(schema = @Schema(implementation = Review.class))),
-            @ApiResponse(responseCode = "404", description = "Review no encontrada",
-                    content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "400", description = "Solicitud no válida",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
-    })
-    @PutMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Review> modifyReview(@PathVariable ReviewId id, @RequestBody Review newReview){
-        Review review = reviewService.modifyReview(id, newReview);
-        return new ResponseEntity<>(newReview, HttpStatus.OK);
-    }
-
     @Operation(summary = "Eliminar una review por su ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Review eliminada exitosamente",
@@ -131,8 +116,10 @@ public class ReviewController {
             @ApiResponse(responseCode = "404", description = "Review no encontrada",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @DeleteMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Response> deleteReview(@PathVariable ReviewId id){
+    @DeleteMapping(value = "/{idArticle}/{idUser}", produces = "application/json")
+    public ResponseEntity<Response> deleteReview(@PathVariable(value = "idArticle") long idArticle,
+                                                 @PathVariable(value = "idUser") long idUser){
+        ReviewId id = new ReviewId(idArticle, idUser);
         reviewService.deleteReview(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
