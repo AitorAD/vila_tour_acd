@@ -18,6 +18,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Set<Recipe> findByDescription(String description);
 
+    Set<Recipe> findAllByRecent(boolean recent);
+
     Set<Recipe> findByAverageScore(double averageScore);
 
     Set<Recipe> findByIngredients(Ingredient ingredient);

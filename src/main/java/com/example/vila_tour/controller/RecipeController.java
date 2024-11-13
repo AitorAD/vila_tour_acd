@@ -61,6 +61,15 @@ public class RecipeController {
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtiene todas las recetas receintes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recetas recientes",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
+    @GetMapping(value = "/recent", produces = "application/json")
+    public Set<Recipe> getAllByRecent(@RequestParam boolean recent) {
+        return recipeService.findAllByRecent(recent);
+    }
+
     @Operation(summary = "Obtiene todas las recetas ordenadas por nombre de forma ascendente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas ordenadas por nombre",
