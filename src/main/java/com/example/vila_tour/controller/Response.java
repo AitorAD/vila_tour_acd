@@ -29,4 +29,9 @@ public class Response {
     public static Response errorResponse(int errorCode, String errorMessage) {
         return new Response(new Error(errorCode, errorMessage));
     }
+
+    public Response setMessage(String message) {
+        this.error.setMessage(message);
+        return this;
+    }
 }

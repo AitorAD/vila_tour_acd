@@ -2,6 +2,7 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.domain.Ingredient;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.exception.IngredientNotFoundException;
 import com.example.vila_tour.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,10 +90,23 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
-    public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
-        return new ResponseEntity<>(addedIngredient, HttpStatus.CREATED);
+    public ResponseEntity<Response> addIngredient(@RequestBody Ingredient ingredient) {
+        try {
+            Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
+            // Successful response, no error
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (IngredientAlreadyExistsException ex) {
+            // Return a 400 Bad Request response with custom error code and message
+            Response errorResponse = Response.errorResponse(101, "El ingrediente ya existe.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            // General error response for unexpected exceptions
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
     @Operation(summary = "Modifica un ingrediente existente")
     @ApiResponses(value = {
@@ -113,7 +127,7 @@ public class IngredientController {
         }
     }
 
-        @Operation(summary = "Elimina un ingrediente por su ID")
+    @Operation(summary = "Elimina un ingrediente por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ingrediente eliminado exitosamente",
                     content = @Content(schema = @Schema(implementation = Response.class))),
