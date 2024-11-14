@@ -75,9 +75,9 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "/category", produces = "application/json")
-    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") String category) {
-        CategoryIngredient categoryIngredient = CategoryIngredient.valueOf(category.toUpperCase());
-        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategory(categoryIngredient);
+    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") long idCategoryIngredient) {
+
+        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategoryId(idCategoryIngredient);
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
     }
 

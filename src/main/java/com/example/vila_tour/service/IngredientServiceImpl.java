@@ -32,8 +32,8 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Set<Ingredient> findIngredientsByCategory(CategoryIngredient category) {
-        return ingredientRepository.findIngredientsByCategory(category);
+    public Set<Ingredient> findIngredientsByCategoryId(long idCategoryIngredient) {
+        return ingredientRepository.findIngredientsByCategoryId(idCategoryIngredient);
     }
 
     @Override

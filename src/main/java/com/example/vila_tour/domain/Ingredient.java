@@ -1,12 +1,14 @@
 package com.example.vila_tour.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -29,9 +31,10 @@ public class Ingredient {
     @Column(unique = true)
     private String name;
 
-    @Schema(description = "Categoría a la que pertenece el ingrediente", example = "Verdura", required = true)
-    @Enumerated(EnumType.STRING)
-    @Column
+    @Schema(description = "Categoría a la que pertenece el ingrediente", example = "Frutas y Verduras", required = true)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    // @JsonIgnoreProperties("ingredients")
     private CategoryIngredient category;
 
     @ManyToMany(cascade = CascadeType.DETACH, mappedBy = "ingredients")
