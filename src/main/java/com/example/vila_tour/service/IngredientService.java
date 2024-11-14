@@ -12,7 +12,8 @@ public interface IngredientService {
     Set<Ingredient> findAll();
     Optional<Ingredient> findIngredientById(long idIngredient);
     Set<Ingredient> findIngredientsByNameLike(String name);
-    Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
+
+    Set<Ingredient> findIngredientsByCategoryId(long idCategoryIngredient);
 
     Ingredient addIngredient(Ingredient ingredient);
     Ingredient modifyIngredient(long id, Ingredient newIngredient); // Corrección aquí
