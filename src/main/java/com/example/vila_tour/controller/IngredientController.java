@@ -75,9 +75,9 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "/category", produces = "application/json")
-    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") String category) {
-        CategoryIngredient categoryIngredient = CategoryIngredient.valueOf(category.toUpperCase());
-        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategory(categoryIngredient);
+    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") long idCategoryIngredient) {
+
+        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategoryId(idCategoryIngredient);
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
     }
 
@@ -106,10 +106,14 @@ public class IngredientController {
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Ingredient> modifyIngredient(@PathVariable("id") Long idIngredient, @RequestBody Ingredient newIngredient) {
         Ingredient ingredient = ingredientService.modifyIngredient(idIngredient, newIngredient);
-        return new ResponseEntity<>(ingredient, HttpStatus.OK);
+        if (ingredient != null) {
+            return new ResponseEntity<>(ingredient, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Si no se encuentra el ingrediente
+        }
     }
 
-    @Operation(summary = "Elimina un ingrediente por su ID")
+        @Operation(summary = "Elimina un ingrediente por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ingrediente eliminado exitosamente",
                     content = @Content(schema = @Schema(implementation = Response.class))),

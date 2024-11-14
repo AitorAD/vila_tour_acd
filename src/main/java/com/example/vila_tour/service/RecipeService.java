@@ -12,6 +12,7 @@ public interface RecipeService {
     Set<Recipe> findAllRecipes(); // Encuentra todas las recetas.
     Optional<Recipe> findRecipeById(long id); // Encuentra una receta por su ID.
     Set<Recipe> findRecipesByDescription(String description); // Encuentra recetas por descripción.
+    Set<Recipe> findAllByRecent(boolean recent); //Encontrar todas las recetas recientes
     Set<Recipe> findRecipesByAverageScore(double averageScore); // Encuentra recetas por puntuación promedio.
     Set<Recipe> findRecipesByIngredient(Ingredient ingredient); // Encuentra recetas por ingrediente.
     Set<Recipe> findAllByOrderByName();  // Ascendente
