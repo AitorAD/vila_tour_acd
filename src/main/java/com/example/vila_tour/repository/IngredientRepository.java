@@ -14,7 +14,7 @@ import java.util.Set;
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
     Set<Ingredient> findAll();
     Optional<Ingredient> findIngredientByIdIngredient(long idIngredient);
-    Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
+    Set<Ingredient> findIngredientsByCategoryId(long categoryId);
     Ingredient findByName(String name);
 
     @Query(value = "SELECT * FROM ingredients WHERE name LIKE %:nameIngredient%", nativeQuery = true)
