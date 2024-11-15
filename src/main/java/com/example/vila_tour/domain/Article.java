@@ -31,7 +31,7 @@ public abstract class Article {
     @Column(unique = true)
     private String name;
     @Schema(description = "Descripcion del articulo", example = "La mejor receta")
-    @Column
+    @Column(length = 1000)
     private String description;
     @Schema(description = "Ruta de las imagenes dela rtículo", example = "[https://imagen1.es, https://imagen1.es]")
     @Column
