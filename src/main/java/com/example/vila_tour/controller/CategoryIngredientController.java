@@ -4,6 +4,7 @@ package com.example.vila_tour.controller;
 import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.domain.Festival;
+import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.exception.CategoryIngredientNotFoundException;
 import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.service.CategoryIngredientService;
@@ -73,6 +74,38 @@ public class CategoryIngredientController {
         Set<CategoryIngredient> categoryIngredient;
         categoryIngredient = categoryIngredientService.findByNameContaining(name);
         return new ResponseEntity<>(categoryIngredient, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Modifica una categoria de ingrediente existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ingrediente modificado exitosamente",
+                    content = @Content(schema = @Schema(implementation = Ingredient.class))),
+            @ApiResponse(responseCode = "404", description = "Ingrediente no encontrado",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PutMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<CategoryIngredient> modifyCategory(@PathVariable("id") Long idCategory, @RequestBody CategoryIngredient newCategoryIngredient) {
+        CategoryIngredient categoryIngredient = categoryIngredientService.modifyCategoryIngredient(idCategory, newCategoryIngredient);
+        if (categoryIngredient != null) {
+            return new ResponseEntity<>(categoryIngredient, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Si no se encuentra el ingrediente
+        }
+    }
+
+    @Operation(summary = "Elimina un ingrediente por su ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ingrediente eliminado exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "404", description = "Ingrediente no encontrado",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response> deleteIngredient(@PathVariable("id") Long idCategory) {
+        categoryIngredientService.deleteCategoryIngredient(idCategory);
+        return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 
     @ExceptionHandler(CategoryIngredientNotFoundException.class)
