@@ -22,7 +22,6 @@ public class User {
     private String username;
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "rol", nullable = false)
@@ -31,7 +30,7 @@ public class User {
     private String name;
     @Column(name = "surname")
     private String surname;
-    @Column(name = "profilePicture")
+    @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
