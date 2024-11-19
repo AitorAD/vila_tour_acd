@@ -7,6 +7,7 @@ import com.example.vila_tour.domain.Festival;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.exception.CategoryIngredientNotFoundException;
 import com.example.vila_tour.exception.FestivalNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.CategoryIngredientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -75,6 +76,31 @@ public class CategoryIngredientController {
         categoryIngredient = categoryIngredientService.findByNameContaining(name);
         return new ResponseEntity<>(categoryIngredient, HttpStatus.OK);
     }
+
+    @Operation(summary = "Añade una nueva caegoria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categoria añadida exitosamente",
+                    content = @Content(schema = @Schema(implementation = Ingredient.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, la categoria no pudo añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "", produces = "application/json")
+    public ResponseEntity<Response> addCategoryIngredient(@RequestBody CategoryIngredient categoryIngredient) {
+        try {
+            CategoryIngredient addCategoryIngredient = categoryIngredientService.addCategoryIngredient(categoryIngredient);
+            // Successful response, no error
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (IngredientAlreadyExistsException ex) {
+            // Return a 400 Bad Request response with custom error code and message
+            Response errorResponse = Response.errorResponse(101, "La categoria ya existe.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            // General error response for unexpected exceptions
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @Operation(summary = "Modifica una categoria de ingrediente existente")
     @ApiResponses(value = {
