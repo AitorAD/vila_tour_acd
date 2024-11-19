@@ -66,9 +66,19 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
-    @GetMapping(value = "/username", produces = "application/json")
+    @GetMapping(value = "/searchUsername", produces = "application/json")
     public ResponseEntity<Set<User>> getUsersByUsername(@RequestParam("username") String username){
         Set<User> users = userService.findByUsernameContaining(username);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Obtiene un usuario por el username exacto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listado de usuarios",
+                    content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
+    @GetMapping(value = "/username", produces = "application/json")
+    public ResponseEntity<Set<User>> getUserByUsername(@RequestParam("username") String username){
+        Set<User> users = userService.findByUsername(username);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
