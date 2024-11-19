@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -144,6 +145,9 @@ public class RecipeController {
                     content = @Content(schema = @Schema(implementation = Recipe.class)))})
     @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
+        recipe.setCreationDate(LocalDateTime.now());
+        recipe.setLastModificationDate(LocalDateTime.now());
+
         Recipe addedRecipe = recipeService.addRecipe(recipe);
         return new ResponseEntity<>(addedRecipe, HttpStatus.CREATED);
     }
@@ -156,6 +160,8 @@ public class RecipeController {
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @PutMapping(value = "/{idRecipe}", produces = "application/json")
     public ResponseEntity<Recipe> modifyRecipe(@PathVariable("idRecipe") long idRecipe, @RequestBody Recipe newRecipe) {
+        newRecipe.setLastModificationDate(LocalDateTime.now());
+
         Recipe recipe = recipeService.modifyRecipe(idRecipe, newRecipe);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
     }

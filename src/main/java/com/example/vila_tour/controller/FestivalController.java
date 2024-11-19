@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
@@ -164,6 +165,9 @@ public class FestivalController {
     })
     @PostMapping(value = "", produces = "application/json")
     public ResponseEntity<Festival> addFestival(@RequestBody Festival festival){
+        festival.setCreationDate(LocalDateTime.now());
+        festival.setLastModificationDate(LocalDateTime.now());
+
         Festival addedFestival = festivalService.addFestival(festival);
         return new ResponseEntity<>(addedFestival, HttpStatus.OK);
     }
@@ -179,6 +183,8 @@ public class FestivalController {
     })
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Festival> modifyFestival(@PathVariable long id, @RequestBody Festival newFestival){
+        newFestival.setLastModificationDate(LocalDateTime.now());
+
         Festival festival = festivalService.modifyFestival(id, newFestival);
         return new ResponseEntity<>(newFestival,HttpStatus.OK);
     }
