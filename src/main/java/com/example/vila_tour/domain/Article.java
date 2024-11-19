@@ -50,6 +50,6 @@ public abstract class Article {
     private List<Review> reviews = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
     private User creator;
 }
