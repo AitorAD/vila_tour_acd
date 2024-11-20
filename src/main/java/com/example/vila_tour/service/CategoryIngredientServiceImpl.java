@@ -2,6 +2,7 @@ package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.exception.CategoryIngredientNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.repository.CategoryIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class CategoryIngredientServiceImpl implements CategoryIngredientService 
 
     @Override
     public CategoryIngredient addCategoryIngredient(CategoryIngredient categoryIngredient) {
+        for (CategoryIngredient existingCategory : categoryIngredientRepository.findAll()) {
+            if (existingCategory.getName().equalsIgnoreCase(categoryIngredient.getName())) {
+                throw new IngredientAlreadyExistsException("La categoría ya existe.");
+            }
+        }
         return categoryIngredientRepository.save(categoryIngredient);
     }
 

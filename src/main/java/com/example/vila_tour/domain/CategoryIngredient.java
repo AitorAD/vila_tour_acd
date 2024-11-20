@@ -31,7 +31,7 @@ public class CategoryIngredient {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REFRESH, orphanRemoval = false)
     @JsonIgnore
     private List<Ingredient> ingredients;
 }
