@@ -31,7 +31,7 @@ public class Ingredient {
     @Column(unique = true)
     private String name;
 
-    @Schema(description = "Categoría a la que pertenece el ingrediente", example = "Frutas y Verduras", required = true)
+    @Schema(description = "Categoría a la que pertenece el ingrediente", example = "Frutas y Verduras")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     // @JsonIgnoreProperties("ingredients")

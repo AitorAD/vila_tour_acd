@@ -1,12 +1,15 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.CategoryIngredient;
+import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.exception.CategoryIngredientNotFoundException;
 import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.repository.CategoryIngredientRepository;
+import com.example.vila_tour.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,6 +18,9 @@ public class CategoryIngredientServiceImpl implements CategoryIngredientService 
 
     @Autowired
     private CategoryIngredientRepository categoryIngredientRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @Override
     public Set<CategoryIngredient> findAll() {
@@ -52,6 +58,14 @@ public class CategoryIngredientServiceImpl implements CategoryIngredientService 
 
     @Override
     public void deleteCategoryIngredient(long id) {
+        // Desasociar los ingredientes
+        Set<Ingredient> ingredients = ingredientRepository.findIngredientsByCategoryId(id);
+        for (Ingredient ingredient : ingredients) {
+            ingredient.setCategory(null);
+        }
+        ingredientRepository.saveAll(ingredients);
+
+        // Eliminar la categoría
         categoryIngredientRepository.findById(id)
                 .orElseThrow(() -> new CategoryIngredientNotFoundException(id));
         categoryIngredientRepository.deleteById(id);
