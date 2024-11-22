@@ -11,6 +11,6 @@ public class IngredientNotFoundException extends RuntimeException {
     }
 
     public IngredientNotFoundException(long id) {
-        super("Recipe not found: " + id);
+        super("Ingredient not found: " + id);
     }
 }

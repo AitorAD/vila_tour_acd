@@ -2,6 +2,7 @@ package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.domain.Ingredient;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.exception.IngredientNotFoundException;
 import com.example.vila_tour.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,19 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Set<Ingredient> findIngredientsByCategory(CategoryIngredient category) {
-        return ingredientRepository.findIngredientsByCategory(category);
+    public Set<Ingredient> findIngredientsByCategoryId(long idCategoryIngredient) {
+        return ingredientRepository.findIngredientsByCategoryId(idCategoryIngredient);
     }
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
+        // Check if the ingredient already exists by name
+        if (ingredientRepository.findByName(ingredient.getName()) != null) {
+            throw new IngredientAlreadyExistsException("An ingredient with this name already exists.");
+        }
         return ingredientRepository.save(ingredient);
     }
+
 
     @Override
     public Ingredient modifyIngredient(long id, Ingredient newIngredient) { // Corrección aquí

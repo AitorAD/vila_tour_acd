@@ -35,6 +35,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Set<Recipe> findAllByRecent(boolean recent){
+        return recipeRepository.findAllByRecent(recent);
+    }
+
+    @Override
     public Set<Recipe> findRecipesByAverageScore(double averageScore) {
         return recipeRepository.findByAverageScore(averageScore);
     }

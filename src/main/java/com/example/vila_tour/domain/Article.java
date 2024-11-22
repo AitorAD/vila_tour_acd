@@ -1,11 +1,14 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +31,28 @@ public abstract class Article {
     @Column(unique = true)
     private String name;
     @Schema(description = "Descripcion del articulo", example = "La mejor receta")
-    @Column
+    @Column(length = 4000)
     private String description;
-    @Schema(description = "Ruta de la imagen de la receta", example = "https://imagen.es")
-    @Column
-    private String imagePath;
+    @Schema(description = "Imagen en base64", example = "[https://imagen1.es]")
+    @Column(length = Integer.MAX_VALUE) // Marco el length para que en la bd el campo se almacene como long text
+    private String imagensPaths;
     @Schema(description = "Puntuacion media del articulo", example = "4,5", defaultValue = "0.00")
     @Column
     private double averageScore;
+    @Schema(description = "Fecha de creación del articulo", example = "12/12/2024 12:00")
+    @Column
+    private LocalDateTime creationDate;
+    @Schema(description = "fecha de modificacion del articulo", example = "12/12/2024 12:00")
+    @Column
+    private LocalDateTime lastModificationDate;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    /*
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    private User creator;
+
+     */
 }

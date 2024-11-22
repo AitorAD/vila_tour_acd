@@ -26,6 +26,11 @@ public class Recipe extends Article {
     @Column(nullable = false)
     private boolean approved;
 
+    @Schema(description = "Determina si la receta es nueva",
+            example = "false", required = true)
+    @Column(nullable = false)
+    private boolean recent;
+
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "recipe_ingredient",
             joinColumns = @JoinColumn(name = "id_recipe"),

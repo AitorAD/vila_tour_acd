@@ -2,6 +2,7 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.domain.Ingredient;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.exception.IngredientNotFoundException;
 import com.example.vila_tour.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,9 +76,9 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "/category", produces = "application/json")
-    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") String category) {
-        CategoryIngredient categoryIngredient = CategoryIngredient.valueOf(category.toUpperCase());
-        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategory(categoryIngredient);
+    public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") long idCategoryIngredient) {
+
+        Set<Ingredient> ingredients = ingredientService.findIngredientsByCategoryId(idCategoryIngredient);
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
     }
 
@@ -89,10 +90,23 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
-    public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
-        return new ResponseEntity<>(addedIngredient, HttpStatus.CREATED);
+    public ResponseEntity<Response> addIngredient(@RequestBody Ingredient ingredient) {
+        try {
+            Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
+            // Successful response, no error
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (IngredientAlreadyExistsException ex) {
+            // Return a 400 Bad Request response with custom error code and message
+            Response errorResponse = Response.errorResponse(101, "El ingrediente ya existe.");
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            // General error response for unexpected exceptions
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
     @Operation(summary = "Modifica un ingrediente existente")
     @ApiResponses(value = {
@@ -106,7 +120,11 @@ public class IngredientController {
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Ingredient> modifyIngredient(@PathVariable("id") Long idIngredient, @RequestBody Ingredient newIngredient) {
         Ingredient ingredient = ingredientService.modifyIngredient(idIngredient, newIngredient);
-        return new ResponseEntity<>(ingredient, HttpStatus.OK);
+        if (ingredient != null) {
+            return new ResponseEntity<>(ingredient, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Si no se encuentra el ingrediente
+        }
     }
 
     @Operation(summary = "Elimina un ingrediente por su ID")

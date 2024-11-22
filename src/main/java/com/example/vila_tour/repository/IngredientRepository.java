@@ -1,10 +1,7 @@
 package com.example.vila_tour.repository;
 
-import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.CategoryIngredient;
 import com.example.vila_tour.domain.Ingredient;
-import com.example.vila_tour.domain.Recipe;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +14,8 @@ import java.util.Set;
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
     Set<Ingredient> findAll();
     Optional<Ingredient> findIngredientByIdIngredient(long idIngredient);
-    Set<Ingredient> findIngredientsByCategory(CategoryIngredient category);
+    Set<Ingredient> findIngredientsByCategoryId(long categoryId);
+    Ingredient findByName(String name);
 
     @Query(value = "SELECT * FROM ingredients WHERE name LIKE %:nameIngredient%", nativeQuery = true)
     Set<Ingredient> findIngredientsByNameLike(@Param("nameIngredient") String nameIngredient);
