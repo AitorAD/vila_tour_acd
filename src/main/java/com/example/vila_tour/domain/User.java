@@ -33,6 +33,7 @@ public class User {
     @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
+
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Recipe> createdRecipes;
 
