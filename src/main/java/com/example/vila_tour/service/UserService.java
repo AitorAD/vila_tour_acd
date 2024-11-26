@@ -11,7 +11,7 @@ public interface UserService {
     Set<User> findAll();
     Optional<User> findById(long idUser);
     Set<User> findByRole(Role role);
-    Set<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
     Set<User> findByUsernameContaining(String username);
     Set<User> findByEmailContaining(String email);
     Set<User> findByNameContaining(String name);

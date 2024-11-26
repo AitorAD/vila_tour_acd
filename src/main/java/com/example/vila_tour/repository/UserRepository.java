@@ -15,7 +15,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Set<User> findAll();
     Optional<User> findById(long id);
     Set<User> findByRole(Role role);
-    Set<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     // Buscar por que contenga el string en el username
     @Query("SELECT u FROM user u WHERE u.username LIKE %:username%")

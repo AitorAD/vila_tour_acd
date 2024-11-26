@@ -14,8 +14,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -77,8 +79,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
     @GetMapping(value = "/username", produces = "application/json")
-    public ResponseEntity<Set<User>> getUserByUsername(@RequestParam("username") String username){
-        Set<User> users = userService.findByUsername(username);
+    public ResponseEntity<Optional<User>> getUserByUsername(@RequestParam("username") String username){
+        Optional<User> users = userService.findByUsername(username);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -133,6 +135,7 @@ public class UserController {
 
     //MÉTODOS POST, PUT Y DELETE
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Añade un nuevo usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario añadido exitosamente",
@@ -162,6 +165,7 @@ public class UserController {
         return new ResponseEntity<>(newUser,HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Elimina un usuario por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente",
