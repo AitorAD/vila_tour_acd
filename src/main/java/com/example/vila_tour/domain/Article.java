@@ -49,10 +49,8 @@ public abstract class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    /*
     @ManyToOne
-    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-     */
 }
