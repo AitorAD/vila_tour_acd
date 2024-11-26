@@ -18,5 +18,9 @@ public class Place extends Article {
    @Column(nullable = false)
    private Coordinade coordinadesPlace;
 
+   @ManyToOne
+   @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+   private User creator;
+
    // Otros métodos y lógica pueden ir aquí si es necesario
 }

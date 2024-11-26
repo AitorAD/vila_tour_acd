@@ -3,6 +3,8 @@ package com.example.vila_tour.domain;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,4 +31,8 @@ public class Festival extends Article {
     @Schema(description = "Coordenadas del lugar", example = "0,0")
     @Column
     private Coordinade coordinade;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    private User creator;
 }
