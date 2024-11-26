@@ -1,11 +1,37 @@
 package com.example.vila_tour.domain;
 
-import jakarta.persistence.Embeddable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Embeddable
+import java.util.List;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name = "coordinates")
 public class Coordinade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column
+    private String name;
+
+    @Column
     private Double latitude;
+
+    @Column
     private Double longitude;
 
-    // Getters y setters
+    @OneToOne(mappedBy = "coordinade")
+    private Place place;
+
+    @OneToMany(mappedBy = "coordinade", fetch = FetchType.LAZY)
+    private List<Festival> festivals;
+
 }

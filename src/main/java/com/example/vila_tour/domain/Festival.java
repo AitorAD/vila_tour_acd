@@ -1,8 +1,7 @@
 package com.example.vila_tour.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class Festival extends Article {
     @Column
     private LocalDate endDate;
 
-    @Schema(description = "Coordenadas del lugar", example = "0,0")
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "coordinate_id")
     private Coordinade coordinade;
 }

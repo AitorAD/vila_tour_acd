@@ -34,7 +34,6 @@ public class Ingredient {
     @Schema(description = "Categoría a la que pertenece el ingrediente", example = "Frutas y Verduras")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    // @JsonIgnoreProperties("ingredients")
     private CategoryIngredient category;
 
     @ManyToMany(cascade = CascadeType.DETACH, mappedBy = "ingredients")
