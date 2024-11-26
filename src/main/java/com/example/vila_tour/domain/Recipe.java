@@ -36,4 +36,8 @@ public class Recipe extends Article {
             joinColumns = @JoinColumn(name = "id_recipe"),
             inverseJoinColumns = @JoinColumn(name = "id_ingredient"))
     private List<Ingredient> ingredients;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    private User creator;
 }

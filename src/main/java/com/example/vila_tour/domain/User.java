@@ -33,11 +33,14 @@ public class User {
     @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
-    /*
-    @OneToMany(mappedBy = "creator")
-    private List<Article> createdArticles;
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Recipe> createdRecipes;
 
-     */
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Festival> createdFestivals;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Place> createdPlaces;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
