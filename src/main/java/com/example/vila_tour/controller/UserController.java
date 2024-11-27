@@ -49,6 +49,7 @@ public class UserController {
                     description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<User>> getUsers() {
         List<User> users;
         users = userService.findAll();
@@ -61,7 +62,6 @@ public class UserController {
                     content = @Content(schema =  @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "404", description = "El usuario no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.findById(id)
