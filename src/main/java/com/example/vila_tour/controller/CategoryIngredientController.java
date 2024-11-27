@@ -3,10 +3,8 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.CategoryIngredient;
-import com.example.vila_tour.domain.Festival;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.exception.CategoryIngredientNotFoundException;
-import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.CategoryIngredientService;
 import io.swagger.v3.oas.annotations.Operation;
