@@ -2,20 +2,21 @@ package com.example.vila_tour.repository;
 
 import com.example.vila_tour.domain.Role;
 import com.example.vila_tour.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
-    Set<User> findAll();
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findAll();
     Optional<User> findById(long id);
     Set<User> findByRole(Role role);
-    Set<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     // Buscar por que contenga el string en el username
     @Query("SELECT u FROM user u WHERE u.username LIKE %:username%")

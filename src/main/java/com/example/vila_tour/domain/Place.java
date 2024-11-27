@@ -22,6 +22,10 @@ public class Place extends Article {
    @JoinColumn(name = "category_id")
    private CategoryPlace categoryPlace;
 
+   @ManyToOne
+   @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+   private User creator;
+
    @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "coordenada_id", referencedColumnName = "id")
    private Coordinate coordinate;

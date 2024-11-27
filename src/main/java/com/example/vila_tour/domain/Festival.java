@@ -25,6 +25,10 @@ public class Festival extends Article {
     @Column
     private LocalDate endDate;
 
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    private User creator;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coordinate_id")
     private Coordinate coordinate;

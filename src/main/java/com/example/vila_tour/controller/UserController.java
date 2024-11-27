@@ -14,8 +14,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -33,6 +37,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     //MÉTODOS GET
 
     @Operation(summary = "Obtiene el listado de usuarios")
@@ -42,8 +49,9 @@ public class UserController {
                     description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<Set<User>> getUsers() {
-        Set<User> users;
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users;
         users = userService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -55,12 +63,12 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "El usuario no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<User> getUser(@PathVariable long id){
+    public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
 
     @Operation(summary = "Obtiene los usuarios por username que contengan el texto de la búsqueda")
     @ApiResponses(value = {
@@ -77,8 +85,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
     @GetMapping(value = "/username", produces = "application/json")
-    public ResponseEntity<Set<User>> getUserByUsername(@RequestParam("username") String username){
-        Set<User> users = userService.findByUsername(username);
+    public ResponseEntity<Optional<User>> getUserByUsername(@RequestParam("username") String username){
+        Optional<User> users = userService.findByUsername(username);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -142,9 +150,13 @@ public class UserController {
     })
     @PostMapping("")
     public ResponseEntity<User> addUser(@RequestBody User user){
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
         User addedUser = userService.addUser(user);
         return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
+
 
     @Operation(summary = "Modifica un usuario existente")
     @ApiResponses(value = {
@@ -162,6 +174,7 @@ public class UserController {
         return new ResponseEntity<>(newUser,HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Elimina un usuario por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario eliminado exitosamente",
