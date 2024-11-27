@@ -7,6 +7,7 @@ import com.example.vila_tour.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public Set<User> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 

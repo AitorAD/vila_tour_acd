@@ -1,28 +1,23 @@
 package com.example.vila_tour.security.services;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-
 import com.example.vila_tour.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private Long id;
-
     private String username;
-
     private String email;
-
     @JsonIgnore
     private String password;
-
     private GrantedAuthority authority;
 
     public UserDetailsImpl(Long id, String username, String email, String password, GrantedAuthority authority) {

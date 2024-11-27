@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,6 +37,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     //MÉTODOS GET
 
     @Operation(summary = "Obtiene el listado de usuarios")
@@ -44,8 +49,8 @@ public class UserController {
                     description = "Listado de usuarios",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
     @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<Set<User>> getUsers() {
-        Set<User> users;
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users;
         users = userService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -56,13 +61,14 @@ public class UserController {
                     content = @Content(schema =  @Schema(implementation = User.class))),
             @ApiResponse(responseCode = "404", description = "El usuario no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ADMIN')")
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<User> getUser(@PathVariable long id){
+    public ResponseEntity<User> getUser(@PathVariable long id) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
 
     @Operation(summary = "Obtiene los usuarios por username que contengan el texto de la búsqueda")
     @ApiResponses(value = {
@@ -135,7 +141,6 @@ public class UserController {
 
     //MÉTODOS POST, PUT Y DELETE
 
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Añade un nuevo usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario añadido exitosamente",
@@ -145,9 +150,13 @@ public class UserController {
     })
     @PostMapping("")
     public ResponseEntity<User> addUser(@RequestBody User user){
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
         User addedUser = userService.addUser(user);
         return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
+
 
     @Operation(summary = "Modifica un usuario existente")
     @ApiResponses(value = {
