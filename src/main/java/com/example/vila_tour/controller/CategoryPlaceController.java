@@ -49,8 +49,8 @@ public class CategoryPlaceController {
                     content = @Content(schema = @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "La categoría no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "", produces = "application/json")
-    public ResponseEntity<CategoryPlace> getCategoryPlace(@PathVariable long id){
+    @GetMapping(value = "/{idPlace}", produces = "application/json")
+    public ResponseEntity<CategoryPlace> getCategoryPlace(@PathVariable("idPlace") long id){
         CategoryPlace categoryPlace = categoryPlaceService.findById(id)
                 .orElseThrow(() -> new CategoryPlaceNotFoundException(id));
 

@@ -22,9 +22,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     Set<Place> findByAverageScore(double averageScore);
 
-    Set<Place> findPlacesByCategoryId(long categoryId);
-
-    Set<Place> findByCategoryPlace(CategoryPlace categoryPlace);
+    Set<Place> findPlacesByCategoryPlaceId(Long categoryPlaceId);
 
     Set<Place> findAllByOrderByName();  // Ascendente
 
