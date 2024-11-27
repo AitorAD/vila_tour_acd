@@ -1,11 +1,13 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.Festival;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
+@Service
 public interface FestivalService {
     Set<Festival> findAllFestivals();
     Optional<Festival> findFestivalById(long id);

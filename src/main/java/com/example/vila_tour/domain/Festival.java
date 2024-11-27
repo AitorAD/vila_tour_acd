@@ -25,7 +25,7 @@ public class Festival extends Article {
     @Column
     private LocalDate endDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coordinate_id")
-    private Coordinade coordinade;
+    private Coordinate coordinate;
 }

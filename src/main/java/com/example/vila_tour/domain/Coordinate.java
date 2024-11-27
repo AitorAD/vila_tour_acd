@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "coordinates")
-public class Coordinade {
+public class Coordinate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ public class Coordinade {
     @Column
     private Double longitude;
 
-    @OneToOne(mappedBy = "coordinade")
+    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.PERSIST)
     private Place place;
 
-    @OneToMany(mappedBy = "coordinade", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Festival> festivals;
 
 }

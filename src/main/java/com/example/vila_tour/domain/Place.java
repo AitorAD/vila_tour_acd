@@ -1,11 +1,16 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +24,5 @@ public class Place extends Article {
 
    @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "coordenada_id", referencedColumnName = "id")
-   private Coordinade coordinade;
-
+   private Coordinate coordinate;
 }

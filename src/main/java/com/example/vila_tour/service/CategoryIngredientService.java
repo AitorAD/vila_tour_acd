@@ -1,7 +1,6 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.CategoryIngredient;
-import com.example.vila_tour.domain.Festival;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
