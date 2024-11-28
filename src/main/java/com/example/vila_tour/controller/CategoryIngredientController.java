@@ -134,7 +134,7 @@ public class CategoryIngredientController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
-    public ResponseEntity<Response> deleteIngredient(@PathVariable("id") Long idCategory) {
+    public ResponseEntity<Response> deleteCategoryIngredient(@PathVariable("id") Long idCategory) {
         categoryIngredientService.deleteCategoryIngredient(idCategory);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
