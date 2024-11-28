@@ -5,7 +5,7 @@ import com.example.vila_tour.domain.RefreshToken;
 import com.example.vila_tour.domain.Role;
 import com.example.vila_tour.domain.User;
 import com.example.vila_tour.exception.TokenRefreshException;
-import com.example.vila_tour.payload.request.SignupRequest;
+import com.example.vila_tour.payload.request.RegisterRequest;
 import com.example.vila_tour.payload.request.TokenRefreshRequest;
 import com.example.vila_tour.payload.response.JwtResponse;
 import com.example.vila_tour.payload.response.MessageResponse;
@@ -24,9 +24,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -68,12 +65,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
         if (userRepository.findByUsername(signUpRequest.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        if (userRepository.findByEmailContaining(signUpRequest.getEmail()).stream().map(User::getEmail).toList().get(0).equals(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
@@ -102,12 +99,11 @@ public class AuthController {
                         "Refresh token is not in database!"));
     }
 
-    @PostMapping("/signout")
+    @PostMapping("/singout")
     public ResponseEntity<?> logoutUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = userDetails.getId();
         refreshTokenService.deleteByUserId(userId);
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
-
 }
