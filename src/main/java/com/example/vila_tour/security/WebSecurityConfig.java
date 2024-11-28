@@ -56,9 +56,7 @@ public class WebSecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**").permitAll()  // Permitir login y registro sin autenticación
                 .requestMatchers("/auth/login").permitAll()
-                .requestMatchers("/api/test/**").permitAll()  // Permitir rutas de prueba
                 .anyRequest().authenticated();  // Requiere autenticación para el resto
 
         http.authenticationProvider(authenticationProvider());
