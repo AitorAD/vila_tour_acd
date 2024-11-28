@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -40,6 +41,7 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Ingredient>> getIngredients() {
         Set<Ingredient> ingredients = ingredientService.findAll();
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
@@ -53,6 +55,7 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @GetMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Ingredient> getIngredient(@PathVariable("id") Long idIngredient) {
         Ingredient ingredient = ingredientService.findIngredientById(idIngredient)
                 .orElseThrow(() -> new IngredientNotFoundException(idIngredient));
@@ -65,6 +68,7 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "/name", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Ingredient>> getIngredientsByName(@RequestParam("name") String nameIngredient) {
         Set<Ingredient> ingredients = ingredientService.findIngredientsByNameLike(nameIngredient);
         return new ResponseEntity<>(ingredients, HttpStatus.OK);
@@ -76,6 +80,7 @@ public class IngredientController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Ingredient.class))))
     })
     @GetMapping(value = "/category", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Ingredient>> getIngredientsByCategory(@RequestParam("category") long idCategoryIngredient) {
 
         Set<Ingredient> ingredients = ingredientService.findIngredientsByCategoryId(idCategoryIngredient);
@@ -90,6 +95,7 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> addIngredient(@RequestBody Ingredient ingredient) {
         try {
             Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
@@ -118,6 +124,7 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Ingredient> modifyIngredient(@PathVariable("id") Long idIngredient, @RequestBody Ingredient newIngredient) {
         Ingredient ingredient = ingredientService.modifyIngredient(idIngredient, newIngredient);
         if (ingredient != null) {
@@ -135,6 +142,7 @@ public class IngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deleteIngredient(@PathVariable("id") Long idIngredient) {
         ingredientService.deleteIngredient(idIngredient);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

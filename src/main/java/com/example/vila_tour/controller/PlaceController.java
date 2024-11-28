@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Listado de lugares",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Place>> getPlaces() {
         Set<Place> places = placeService.findAllPlaces();
         return new ResponseEntity<>(places, HttpStatus.OK);
@@ -53,6 +55,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "404", description = "El lugar no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{idPlace}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Place> getPlace(@PathVariable("idPlace") long idPlace) {
         Place place = placeService.findPlaceById(idPlace)
                 .orElseThrow(() -> new PlaceNotFoundException(idPlace));
@@ -65,6 +68,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares ordenados por nombre en orden",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "/sorted", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Place> getPlacesSortedByName() {
         return placeService.findAllByOrderByName();
     }
@@ -74,6 +78,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares ordenados por nombre en orden inverso",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "/sortedInverse", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Place> getPlacesSortedByNameReversed() {
         return placeService.findAllByOrderByNameDesc();
     }
@@ -83,7 +88,8 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "/search", produces = "application/json")
-    public Set<Place> searchRecipesByNameAndScore(@RequestParam String name, @RequestParam double score) {
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
+    public Set<Place> searchPlacesByNameAndScore(@RequestParam String name, @RequestParam double score) {
         return placeService.findByNameAndAverageScore(name, score);
     }
 
@@ -92,6 +98,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares encontradao",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search/name", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Place> searchPlacesByNameContaining(@RequestParam String name) {
         return placeService.findByNameContaining(name);
     }
@@ -101,6 +108,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares encontrados",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "/search/description", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Place>> findPlacesByDescription(@RequestParam String description) {
         Set<Place> places = placeService.findPlacesByDescription(description);
         return new ResponseEntity<>(places, HttpStatus.OK);
@@ -111,6 +119,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "Lugares encontrados",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
     @GetMapping(value = "/search/score", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Place>> findPlacesByAverageScore(@RequestParam double averageScore) {
         Set<Place> places = placeService.findPlacesByAverageScore(averageScore);
         return new ResponseEntity<>(places, HttpStatus.OK);
@@ -121,6 +130,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "201", description = "Lugar agregado",
                     content = @Content(schema = @Schema(implementation = Place.class)))})
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Place> addPlace(@RequestBody Place place) {
         place.setCreationDate(LocalDateTime.now());
         place.setLastModificationDate(LocalDateTime.now());
@@ -136,6 +146,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "404", description = "El lugar no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @PutMapping(value = "/{idPlace}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Place> modifyPlace(@PathVariable("idPlace") long idPlace, @RequestBody Place newPlace) {
         newPlace.setLastModificationDate(LocalDateTime.now());
 
@@ -150,6 +161,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "404", description = "El lugar no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @DeleteMapping(value = "/{idPlace}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deletePlace(@PathVariable("idPlace") long idPlace) {
         placeService.deletePlace(idPlace);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

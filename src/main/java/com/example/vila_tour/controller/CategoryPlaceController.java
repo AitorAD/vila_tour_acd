@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -38,6 +39,7 @@ public class CategoryPlaceController {
                     description = "Lista de categorias",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = CategoryPlace.class))))})
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<CategoryPlace>> getCategoryPlaces(){
         Set<CategoryPlace> categoryPlaces = categoryPlaceService.findAll();
         return new ResponseEntity<>(categoryPlaces, HttpStatus.OK);
@@ -50,6 +52,7 @@ public class CategoryPlaceController {
             @ApiResponse(responseCode = "404", description = "La categoría no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{idPlace}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<CategoryPlace> getCategoryPlace(@PathVariable("idPlace") long id){
         CategoryPlace categoryPlace = categoryPlaceService.findById(id)
                 .orElseThrow(() -> new CategoryPlaceNotFoundException(id));
@@ -65,6 +68,7 @@ public class CategoryPlaceController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> addCategoryPlace(@RequestBody CategoryPlace categoryPlace) {
         try {
             CategoryPlace addCategoryPlace = categoryPlaceService.addCategoryPlace(categoryPlace);
@@ -88,6 +92,7 @@ public class CategoryPlaceController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<CategoryPlace> modifyCategory(@PathVariable("id") Long idCategory, @RequestBody CategoryPlace newCategoryPlace) {
         CategoryPlace categoryPlace = categoryPlaceService.modifyCategoryPlace(idCategory, newCategoryPlace);
         if (categoryPlace != null) {
@@ -105,6 +110,7 @@ public class CategoryPlaceController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deleteCategoryIngredient(@PathVariable("id") Long idCategory) {
         categoryPlaceService.deleteCategoryPlace(idCategory);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

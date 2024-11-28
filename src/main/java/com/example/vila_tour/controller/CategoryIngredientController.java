@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -41,6 +42,7 @@ public class CategoryIngredientController {
                     description = "Listado de categorias",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = CategoryIngredient.class))))})
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<CategoryIngredient>> getCategoriesIngredients() {
         Set<CategoryIngredient> categoryIngredients = categoryIngredientService.findAll();
         return new ResponseEntity<>(categoryIngredients, HttpStatus.OK);
@@ -53,6 +55,7 @@ public class CategoryIngredientController {
             @ApiResponse(responseCode = "404", description = "La categoria no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<CategoryIngredient> getCategory(@PathVariable long id){
         CategoryIngredient categoryIngredient = categoryIngredientService.findById(id)
                 .orElseThrow(() -> new CategoryIngredientNotFoundException(id));
@@ -67,6 +70,7 @@ public class CategoryIngredientController {
             @ApiResponse(responseCode = "404", description = "La categoria no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/name", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<CategoryIngredient>> getCategoryByNameContaining(
             @RequestParam(value = "name", defaultValue = "") String name) {
 
@@ -83,6 +87,7 @@ public class CategoryIngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> addCategoryIngredient(@RequestBody CategoryIngredient categoryIngredient) {
         try {
             CategoryIngredient addCategoryIngredient = categoryIngredientService.addCategoryIngredient(categoryIngredient);
@@ -110,6 +115,7 @@ public class CategoryIngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<CategoryIngredient> modifyCategory(@PathVariable("id") Long idCategory, @RequestBody CategoryIngredient newCategoryIngredient) {
         CategoryIngredient categoryIngredient = categoryIngredientService.modifyCategoryIngredient(idCategory, newCategoryIngredient);
         if (categoryIngredient != null) {
@@ -127,6 +133,7 @@ public class CategoryIngredientController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deleteIngredient(@PathVariable("id") Long idCategory) {
         categoryIngredientService.deleteCategoryIngredient(idCategory);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
