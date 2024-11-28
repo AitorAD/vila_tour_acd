@@ -32,6 +32,11 @@ public class User {
     @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Recipe> createdRecipes;

@@ -47,17 +47,17 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(authority);
-    }
-
     public Long getId() {
         return id;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(authority);
     }
 
     @Override
