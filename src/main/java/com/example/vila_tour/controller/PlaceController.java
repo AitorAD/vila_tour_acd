@@ -64,7 +64,7 @@ public class PlaceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lugares ordenados por nombre en orden",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Place.class))))})
-    @GetMapping(value = "/sortedInverse", produces = "application/json")
+    @GetMapping(value = "/sorted", produces = "application/json")
     public Set<Place> getPlacesSortedByName() {
         return placeService.findAllByOrderByName();
     }
@@ -150,7 +150,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "404", description = "El lugar no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @DeleteMapping(value = "/{idPlace}", produces = "application/json")
-    public ResponseEntity<Response> deletePlace(@PathVariable("idRecipe") long idPlace) {
+    public ResponseEntity<Response> deletePlace(@PathVariable("idPlace") long idPlace) {
         placeService.deletePlace(idPlace);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }

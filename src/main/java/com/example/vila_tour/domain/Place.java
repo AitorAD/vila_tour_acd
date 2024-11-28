@@ -27,6 +27,6 @@ public class Place extends Article {
    private User creator;
 
    @OneToOne(cascade = CascadeType.ALL)
-   @JoinColumn(name = "coordenada_id", referencedColumnName = "id")
+   @JoinColumn(name = "coordinate_id", referencedColumnName = "id")
    private Coordinate coordinate;
 }
