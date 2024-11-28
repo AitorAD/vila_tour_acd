@@ -58,7 +58,7 @@ public class CategoryPlaceServiceImpl implements CategoryPlaceService {
     @Override
     public void deleteCategoryPlace(long id) {
         // Desasociar los places
-        Set<Place> places = placeRepository.findPlacesByCategoryId(id);
+        Set<Place> places = placeRepository.findPlacesByCategoryPlaceId(id);
         for (Place place: places) {
            place.setCategoryPlace(null);
         }

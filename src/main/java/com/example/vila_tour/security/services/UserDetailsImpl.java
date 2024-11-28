@@ -1,6 +1,7 @@
 package com.example.vila_tour.security.services;
 
 import com.example.vila_tour.domain.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,14 +16,18 @@ public class UserDetailsImpl implements UserDetails {
 
     private Long id;
     private String username;
+    private String name;
+    private String surname;
     private String email;
     @JsonIgnore
     private String password;
     private GrantedAuthority authority;
 
-    public UserDetailsImpl(Long id, String username, String email, String password, GrantedAuthority authority) {
+    public UserDetailsImpl(Long id, String username, String name, String surname, String email, String password, GrantedAuthority authority) {
         this.id = id;
         this.username = username;
+        this.name = name;
+        this.surname = surname;
         this.email = email;
         this.password = password;
         this.authority = authority;
@@ -34,6 +39,8 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
+                user.getName(),
+                user.getSurname(),
                 user.getEmail(),
                 user.getPassword(),
                 authority
@@ -61,6 +68,14 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     @Override
