@@ -1,5 +1,8 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,12 +42,15 @@ public class User {
     }
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Recipe> createdRecipes;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Festival> createdFestivals;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Place> createdPlaces;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

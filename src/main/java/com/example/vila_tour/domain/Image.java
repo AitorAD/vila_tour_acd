@@ -1,5 +1,7 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,5 +23,6 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
+    @JsonIncludeProperties(value = {"id", "name"})
     private Article article;
 }

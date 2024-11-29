@@ -60,7 +60,7 @@ public class ImageController {
                     content = @Content(schema =  @Schema(implementation = Image.class))),
             @ApiResponse(responseCode = "404", description = "La imagen no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{idImage}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Image> getImage(@PathVariable("idImage") long idImage){
         Image image = imageService.findById(idImage)

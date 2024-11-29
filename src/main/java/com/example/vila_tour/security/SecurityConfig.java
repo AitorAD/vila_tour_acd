@@ -56,12 +56,7 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
-                .requestMatchers(
-                        "/auth/login",
-                        "/auth/register",
-                        "/auth/singout",
-                        "/auth/refreshtoken"
-                ).permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated();  // Requiere autenticación para el resto
 
         http.authenticationProvider(authenticationProvider());
