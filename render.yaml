@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: VilaTourAPI
-    env: java
-    buildCommand: ./mvnw clean install
-    startCommand: java -jar target/*.jar
-    autoDeploy: true
