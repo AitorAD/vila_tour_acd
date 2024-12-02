@@ -14,6 +14,7 @@ public class VilaTourApplication {
 
 		System.out.println("Contraseña codificada: " + encodedPassword);
 		SpringApplication.run(VilaTourApplication.class, args);
+		
 	}
 
 }
