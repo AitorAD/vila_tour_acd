@@ -1,6 +1,7 @@
 package com.example.vila_tour.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class Place extends Article {
 
    @ManyToOne
    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+   @JsonIgnoreProperties("createdPlaces")
    private User creator;
 
    @OneToOne(cascade = CascadeType.ALL)
