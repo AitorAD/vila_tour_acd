@@ -1,5 +1,6 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class Festival extends Article {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties("createdFestivals")
     private User creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
