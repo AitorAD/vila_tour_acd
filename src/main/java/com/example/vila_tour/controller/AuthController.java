@@ -58,9 +58,9 @@ public class AuthController {
 
         String role = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0);
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        // RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
+        return ResponseEntity.ok(new JwtResponse(jwt, /*refreshToken.getToken(),*/ userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), role));
     }
 
@@ -104,7 +104,7 @@ public class AuthController {
     public ResponseEntity<?> logoutUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = userDetails.getId();
-        refreshTokenService.deleteByUserId(userId);
+        // refreshTokenService.deleteByUserId(userId);
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
 }
