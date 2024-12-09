@@ -3,6 +3,7 @@ package com.example.vila_tour.controller;
 import com.example.vila_tour.domain.*;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.exception.UserNotFoundException;
+import com.example.vila_tour.security.services.AuthService;
 import com.example.vila_tour.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,7 +15,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +43,9 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthService authService;
+
     //MÉTODOS GET
 
     @Operation(summary = "Obtiene el listado de usuarios")
@@ -63,11 +69,16 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "El usuario no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<User> getUser(@PathVariable long id) {
+    public ResponseEntity<User> getUser(@PathVariable long id, Authentication authentication) {
+        // Verificar si el usuario tiene permiso para acceder al recurso
+        if (!authService.canAccessUser(authentication, id)) {
+            throw new AccessDeniedException("No tienes permiso para acceder a este usuario.");
+        }
+
+        // Recuperar y devolver el usuario
         User user = userService.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-        return new ResponseEntity<>(user, HttpStatus.OK);
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + id));
+        return ResponseEntity.ok(user);
     }
 
 
