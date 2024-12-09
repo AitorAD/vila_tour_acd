@@ -75,7 +75,7 @@ public class CategoryIngredientController {
         return new ResponseEntity<>(categoryIngredient, HttpStatus.OK);
     }
 
-    @Operation(summary = "Añade una nueva caegoria")
+    @Operation(summary = "Añade una nueva categoria")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Categoria añadida exitosamente",
                     content = @Content(schema = @Schema(implementation = Ingredient.class))),

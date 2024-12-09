@@ -57,14 +57,12 @@ public class CategoryIngredientServiceImpl implements CategoryIngredientService 
 
     @Override
     public void deleteCategoryIngredient(long id) {
-        // Desasociar los ingredientes
         Set<Ingredient> ingredients = ingredientRepository.findIngredientsByCategoryId(id);
         for (Ingredient ingredient : ingredients) {
             ingredient.setCategory(null);
         }
         ingredientRepository.saveAll(ingredients);
 
-        // Eliminar la categoría
         categoryIngredientRepository.findById(id)
                 .orElseThrow(() -> new CategoryIngredientNotFoundException(id));
         categoryIngredientRepository.deleteById(id);
