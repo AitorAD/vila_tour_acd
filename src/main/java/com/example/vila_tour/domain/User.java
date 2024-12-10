@@ -1,5 +1,8 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,14 +35,22 @@ public class User {
     @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Recipe> createdRecipes;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Festival> createdFestivals;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
     private List<Place> createdPlaces;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

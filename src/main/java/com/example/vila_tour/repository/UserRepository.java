@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Set<User> findByRole(Role role);
     Optional<User> findByUsername(String username);
 
+    Boolean existsByEmail(String email);
+
     // Buscar por que contenga el string en el username
     @Query("SELECT u FROM user u WHERE u.username LIKE %:username%")
     Set<User> findByUsernameContaining(@Param("username") String userName);
