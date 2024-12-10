@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -29,9 +30,13 @@ public class Coordinate {
     private Double longitude;
 
     @OneToOne(mappedBy = "coordinate", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private Place place;
 
     @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private List<Festival> festivals;
-
 }
+
