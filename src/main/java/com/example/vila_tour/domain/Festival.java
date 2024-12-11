@@ -34,5 +34,7 @@ public class Festival extends Article {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coordinate_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "place", "festivals"})
     private Coordinate coordinate;
+
 }

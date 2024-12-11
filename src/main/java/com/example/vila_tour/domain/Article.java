@@ -33,9 +33,6 @@ public abstract class Article {
     @Schema(description = "Descripcion del articulo", example = "La mejor receta")
     @Column(length = 4000)
     private String description;
-    @Schema(description = "Imagen en base64", example = "[https://imagen1.es]")
-    @Column(length = Integer.MAX_VALUE) // Marco el length para que en la bd el campo se almacene como long text
-    private String imagensPaths;
     @Schema(description = "Puntuacion media del articulo", example = "4,5", defaultValue = "0.00")
     @Column
     private double averageScore;
