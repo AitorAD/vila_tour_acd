@@ -43,7 +43,6 @@ public class FestivalController {
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
     @GetMapping(value = "", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> getFestivals() {
         Set<Festival> festivals = festivalService.findAllFestivals();
         return new ResponseEntity<>(festivals, HttpStatus.OK);
