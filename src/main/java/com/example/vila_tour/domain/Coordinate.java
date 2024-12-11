@@ -34,7 +34,7 @@ public class Coordinate {
     @EqualsAndHashCode.Exclude
     private Place place;
 
-    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Festival> festivals;
