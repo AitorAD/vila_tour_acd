@@ -1,12 +1,15 @@
 package com.example.vila_tour.service;
 
 import com.example.vila_tour.domain.Ingredient;
+import com.example.vila_tour.domain.Place;
 import com.example.vila_tour.domain.Recipe;
+import com.example.vila_tour.exception.PlaceNotFoundException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sound.midi.Receiver;
 import java.util.Optional;
 import java.util.Set;
 import java.util.HashSet;
@@ -76,13 +79,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe modifyRecipe(long id, Recipe newRecipe) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new RecipeNotFoundException(id));
-
-        // Actualiza solo los campos que deseas cambiar
-        recipe.setName(newRecipe.getName());
-        recipe.setDescription(newRecipe.getDescription());
-
-        return recipeRepository.save(recipe);
+                .orElseThrow(()-> new RecipeNotFoundException(id));
+        newRecipe.setId(recipe.getId());
+        return recipeRepository.save(newRecipe);
     }
 
     @Override
