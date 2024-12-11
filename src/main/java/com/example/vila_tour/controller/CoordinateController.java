@@ -64,13 +64,13 @@ public class CoordinateController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
-    public ResponseEntity<Response> addCoordinate(@RequestBody Coordinate coordinate) {
+    public ResponseEntity<Coordinate> addCoordinate(@RequestBody Coordinate coordinate) {
         try {
             Coordinate addedCoordinate = coordinateService.addCoordinate(coordinate);
-            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+            return new ResponseEntity<>(addedCoordinate, HttpStatus.CREATED);
         } catch (Exception ex) {
             Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -89,7 +89,7 @@ public class CoordinateController {
         if (coordinate != null) {
             return new ResponseEntity<>(coordinate, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Si no se encuentra la coordenada
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
