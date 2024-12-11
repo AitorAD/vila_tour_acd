@@ -73,9 +73,9 @@ public class ImageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Imagenes encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Image.class))))})
-    @GetMapping(value = "/byArticle", produces = "application/json")
+    @GetMapping(value = "/byArticle/{idArticle}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
-    public ResponseEntity<Set<Image>> findImagesByArticle(@RequestParam long idArticle) {
+    public ResponseEntity<Set<Image>> findImagesByArticle(@PathVariable long idArticle) {
         Article article = articleService.findArticleById(idArticle)
                 .orElseThrow(() -> new ArticleNotFoundException(idArticle));
         Set<Image> images = imageService.findByArticle(article);

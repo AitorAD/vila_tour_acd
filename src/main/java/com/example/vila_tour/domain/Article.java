@@ -1,6 +1,10 @@
 package com.example.vila_tour.domain;
 
+import com.example.vila_tour.domain.deserializer.ArticleDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,6 +21,16 @@ import java.util.List;
  * @author TeamAjo
  * @version Curso 2024-2025
  */
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Festival.class, name = "festival"),
+        @JsonSubTypes.Type(value = Recipe.class, name = "recipe"),
+        @JsonSubTypes.Type(value = Place.class, name = "place")
+})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
