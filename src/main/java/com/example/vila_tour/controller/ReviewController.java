@@ -82,9 +82,9 @@ public class ReviewController {
     @GetMapping(value = "/byArticle", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Review>> findByArticle(
-            @RequestParam(value = "idArticle", defaultValue = "0") long idArticle) {
+            @RequestParam(value = "idArticle", defaultValue = "0") long idArticle, long article) {
         Set<Review> reviews = reviewService.findByArticle(idArticle);
-        return new ResponseEntity<>(reviews, HttpStatus.OK);
+        return new ResponseEntity<Set<Review>>(reviews, HttpStatus.OK);
     }
 
     @Operation(summary = "Buscar reviews por usuario")
@@ -111,8 +111,18 @@ public class ReviewController {
     })
     @PostMapping(value = "", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
-    public ResponseEntity<Review> addReview(@RequestBody Review review){
-        Review addedReview = reviewService.addReview(review);
+    public ResponseEntity<Review> addReview(
+            @RequestParam("id_user") Long idUser,
+            @RequestParam("id_article") Long idArticle,
+            @RequestBody Review review
+    ) {
+        // Configurar los IDs en la reseña
+        review.setId(new ReviewId(idUser, idArticle));
+
+        // Llamada al servicio para añadir la reseña
+        Review addedReview = reviewService.addReview(review, idUser, idArticle);
+
+        // Respuesta HTTP
         return new ResponseEntity<>(addedReview, HttpStatus.OK);
     }
 
@@ -123,14 +133,22 @@ public class ReviewController {
             @ApiResponse(responseCode = "404", description = "Review no encontrada",
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
-    @DeleteMapping(value = "/{idArticle}/{idUser}", produces = "application/json")
+    @DeleteMapping(value = "", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
-    public ResponseEntity<Response> deleteReview(@PathVariable(value = "idArticle") long idArticle,
-                                                 @PathVariable(value = "idUser") long idUser){
-        ReviewId id = new ReviewId(idArticle, idUser);
-        reviewService.deleteReview(id);
-        return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
+    public ResponseEntity<Response> deleteReview(
+            @RequestParam(value = "id_user") long idUser,
+            @RequestParam(value = "id_article") long idArticle
+    ) {
+        try {
+            ReviewId reviewId = new ReviewId(idUser, idArticle);
+            reviewService.deleteReview(reviewId);
+            return ResponseEntity.ok(Response.noErrorResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.errorResponse(401, e.getMessage()));
+        }
     }
+
+
 
     @ExceptionHandler(FestivalNotFoundException.class)
     @ResponseBody

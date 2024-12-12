@@ -3,6 +3,8 @@ package com.example.vila_tour.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,8 @@ public class Review {
 
     @Schema(description = "Puntuacion del usuario al articulo", example = "4.5")
     @Column
+    @Min(value = 0, message = "Debe ser mayo o igual a 0")
+    @Max(value = 5, message = "Debe ser menor o igual a 5")
     private long rating;
 
     @Schema(description = "Comentario de la review", example = "Me gustó mucho, Javi RR un crack")
@@ -47,4 +51,20 @@ public class Review {
     @Schema(description = "Marca como favorito", example = "false")
     @Column
     private boolean favorite;
+
+    // Método para sincronizar cambios en la puntuación
+    @PostPersist
+    @PostUpdate
+    private void onPostPersistOrUpdate() {
+        if (article != null) {
+            article.updateAverageScore();
+        }
+    }
+
+    @PostRemove
+    private void onPostRemove() {
+        if (article != null) {
+            article.updateAverageScore();
+        }
+    }
 }

@@ -62,4 +62,26 @@ public abstract class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Image> images;
+
+    // Método para recalcular y actualizar la puntuación media
+    public void updateAverageScore() {
+        if (reviews == null || reviews.isEmpty()) {
+            this.averageScore = 0.0;
+        } else {
+            double total = 0;
+            for (Review review: reviews) {
+                total += review.getRating();
+            }
+            double media = total/(reviews.size());
+
+            this.averageScore = media;
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void onPrePersistOrUpdate() {
+        updateAverageScore();
+        this.lastModificationDate = LocalDateTime.now(); // Actualiza la fecha de modificación
+    }
 }
