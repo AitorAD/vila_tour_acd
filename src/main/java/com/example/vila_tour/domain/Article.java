@@ -2,6 +2,7 @@ package com.example.vila_tour.domain;
 
 import com.example.vila_tour.domain.deserializer.ArticleDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -31,6 +32,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = Recipe.class, name = "recipe"),
         @JsonSubTypes.Type(value = Place.class, name = "place")
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -62,5 +64,6 @@ public abstract class Article {
 
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Image> images;
 }

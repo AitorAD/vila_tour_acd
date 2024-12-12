@@ -112,9 +112,9 @@ public class ImageController {
                     content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "404", description = "La imagen no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @DeleteMapping(value = "/{idImagen}", produces = "application/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
-    public ResponseEntity<Response> deleteImage(@PathVariable("idImage") long idImage) {
+    public ResponseEntity<Response> deleteImage(@PathVariable("id") long idImage) {
         imageService.deleteImage(idImage);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
