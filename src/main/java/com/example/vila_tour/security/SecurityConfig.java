@@ -56,14 +56,14 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated();  // Requiere autenticación para el resto
+                .requestMatchers("/auth/**").permitAll()  // Permitir acceso sin autenticación a /auth/**
+                .requestMatchers("/send-mail").permitAll()  // Permitir acceso sin autenticación a /send-mail
+                .requestMatchers("/users/email/exist").permitAll()  // Permitir acceso sin autenticación a /email/exist
+                .anyRequest().authenticated();  // Proteger todas las demás rutas
 
         http.authenticationProvider(authenticationProvider());
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

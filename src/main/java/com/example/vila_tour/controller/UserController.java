@@ -1,8 +1,8 @@
 package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.*;
-import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.exception.UserNotFoundException;
+import com.example.vila_tour.payload.response.EmailExistResponse;
 import com.example.vila_tour.security.services.AuthService;
 import com.example.vila_tour.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import static com.example.vila_tour.controller.Response.NOT_FOUND;
 
 /**
  * Controlador para Usuarios
@@ -104,17 +103,40 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @Operation(summary = "Obtiene los usuarios por email")
+    @Operation(summary = "Verifica si un usuario existe por email")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Listado de usuarios que contengan el texto de la búsqyeda",
-                    content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
+                    description = "Usuario encontrado",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuario no encontrado",
+                    content = @Content(schema = @Schema(example = "Usuario no encontrado")))
+    })
     @GetMapping(value = "/email", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Set<User>> getUsersByEmail(@RequestParam("email") String email){
-        Set<User> users = userService.findByEmailContaining(email);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<User> getUserByEmail(@RequestParam("email") String email) {
+        return userService.findByEmail(email)
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK)) // Si se encuentra el usuario
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Si no se encuentra
+    }
+
+    @Operation(summary = "Verifica si un email existe")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "El estado del correo",
+                    content = @Content(schema = @Schema(implementation = EmailExistResponse.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuario no encontrado",
+                    content = @Content(schema = @Schema(example = "Usuario no encontrado")))
+    })
+    @PermitAll
+    @GetMapping(value = "/email/exist", produces = "application/json")
+    public ResponseEntity<EmailExistResponse> checkIfEmailExists(@RequestParam("email") String email) {
+        boolean exists = userService.existsByEmail(email);
+        return ResponseEntity.ok(new EmailExistResponse(exists));
     }
 
     @Operation(summary = "Obtiene los usuarios por nombre que contengan el texto de la búsqueda")

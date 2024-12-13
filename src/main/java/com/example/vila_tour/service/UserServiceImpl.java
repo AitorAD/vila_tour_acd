@@ -38,13 +38,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username){
-        return userRepository.findByUsername(username);
+    public Optional<User> findByEmail(String email) {
+        return Optional.empty();
     }
 
     @Override
-    public Set<User> findByEmailContaining(String email){
-        return  userRepository.findByEmailContaining(email);
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -56,6 +61,8 @@ public class UserServiceImpl implements UserService {
     public Set<User> findBySurnameContaining(String surname){
         return userRepository.findBySurnameContaining(surname);
     }
+
+
 
     @Override
     public User addUser(User user) {
