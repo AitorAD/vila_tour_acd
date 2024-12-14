@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -187,11 +189,25 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<User> modifyUser(@PathVariable long id,
-                                           @RequestBody User user){
+                                           @RequestBody User user) {
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        // Verificar si es USER y está intentando modificar su propio perfil
+        User authenticatedUser = userService.findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        if (authentication.getAuthorities().stream().anyMatch(
+                authority -> authority.getAuthority().equals("USER")) && id != authenticatedUser.getId()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN); // Código 403: Prohibido
+        }
+
+        // Modificar el usuario
         User newUser = userService.modifyUser(id, user);
-        return new ResponseEntity<>(newUser,HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
 
     @Operation(summary = "Elimina un usuario por su ID")
