@@ -158,7 +158,7 @@ public class UserController {
                     responseCode = "200",
                     description = "Listado de usuarios que contengan el texto de la búsqyeda",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = User.class))))})
-    @GetMapping(value = "/surname", produces = "application/json")
+    @GetMapping(value = "/users-email", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Set<User>> getUsersBySurname(@RequestParam("email") String email){
         Set<User> users = userService.findBySurnameContaining(email);

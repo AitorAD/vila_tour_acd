@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()  // Permitir acceso sin autenticación a /auth/**
                 .requestMatchers("/send-mail").permitAll()  // Permitir acceso sin autenticación a /send-mail
                 .requestMatchers("/users/email/exist").permitAll()  // Permitir acceso sin autenticación a /email/exist
+                .requestMatchers("/mail/recoverymail/**").permitAll()  // Permitir acceso sin autenticación a /mail/send-mail
                 .anyRequest().authenticated();  // Proteger todas las demás rutas
 
         http.authenticationProvider(authenticationProvider());

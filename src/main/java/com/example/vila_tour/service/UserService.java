@@ -22,4 +22,5 @@ public interface UserService {
     User addUser(User user);
     User modifyUser(long id, User newUser);
     void deleteUser(long id);
+    boolean updatePasswordByEmail(String email, String newPassword);
 }
