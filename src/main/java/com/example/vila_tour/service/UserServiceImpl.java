@@ -5,6 +5,7 @@ import com.example.vila_tour.domain.User;
 import com.example.vila_tour.exception.UserNotFoundException;
 import com.example.vila_tour.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,16 +87,18 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public boolean updatePasswordByEmail(String email, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        System.out.println(newPassword);
+        System.out.println(encodedPassword);
         return userRepository.findByEmail(email)
                 .map(user -> {
-                    user.setPassword(passwordEncoder.encode(newPassword));
+                    user.setPassword(encodedPassword);
                     userRepository.save(user);
                     return true;
                 })
                 .orElse(false);
     }
+
 }

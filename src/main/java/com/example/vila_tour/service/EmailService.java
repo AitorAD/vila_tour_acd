@@ -18,13 +18,13 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom("tu_correo@gmail.com");
+        message.setFrom("vilatourproject@gmail.com");
         mailSender.send(message);
     }
 
     public String generateRandomPassword() {
         int length = 10; // Longitud de la contraseña
-        String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%!&*";
+        String characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
 

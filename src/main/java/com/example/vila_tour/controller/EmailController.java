@@ -41,7 +41,7 @@ public class EmailController {
                     email,
                     "Recuperación de Contraseña",
                     "Hola,\n\nEste es un correo enviado desde VilaTour porque has solicitado recuperar tu contraseña. "
-                            + "Tu nueva contraseña es: " + newPassword + "\n\nGracias por usar VilaTour."
+                            + "\n\nTu nueva contraseña es: " + newPassword + "\n\nGracias por usar VilaTour."
             );
             // Responder al cliente
             return ResponseEntity.ok("Correo enviado exitosamente.");
