@@ -14,8 +14,12 @@ import com.example.vila_tour.repository.UserRepository;
 import com.example.vila_tour.security.jwt.JwtUtils;
 import com.example.vila_tour.security.services.RefreshTokenService;
 import com.example.vila_tour.security.services.UserDetailsImpl;
+import com.example.vila_tour.service.EmailService;
+import com.example.vila_tour.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +28,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -36,7 +42,13 @@ public class AuthController {
     UserRepository userRepository;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -98,6 +110,35 @@ public class AuthController {
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));
+    }
+
+    @PermitAll
+    @PostMapping("/recoverymail/email")
+    public ResponseEntity<String> sendTestEmail(@RequestParam("email") String email) {
+        try {
+            if (email == null || email.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El email es requerido.");
+            }
+
+            String newPassword = emailService.generateRandomPassword();
+            Optional<User> user = userService.findByEmail(email);
+
+            if (user.isPresent()) {
+                userService.updatePasswordByEmail(email, newPassword);
+                emailService.sendEmail(
+                        email,
+                        "Recuperación de Contraseña",
+                        "Hola,\n\nEste es un correo enviado desde VilaTour porque has solicitado recuperar tu contraseña. "
+                                + "\n\nTu nueva contraseña es: " + newPassword + "\n\nGracias por usar VilaTour."                );
+
+                return ResponseEntity.ok("Correo enviado exitosamente.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: El usuario no existe.");
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al recuperar la contraseña: " + ex.getMessage());
+        }
     }
 
     @PostMapping("/singout")

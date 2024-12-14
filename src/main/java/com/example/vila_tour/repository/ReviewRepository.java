@@ -16,6 +16,8 @@ public interface ReviewRepository extends CrudRepository<Review, ReviewId> {
 
     Set<Review> findAll();
 
+    Optional<Review> findById(ReviewId id);
+
     @Query(value = "SELECT * FROM Review WHERE article_id = :article_id AND rating = :rating", nativeQuery = true)
     Set<Review> findByRatingAndArticle(@Param("rating") long rating, @Param("article_id") long articleId);
 
@@ -27,6 +29,4 @@ public interface ReviewRepository extends CrudRepository<Review, ReviewId> {
 
     @Query(value = "SELECT * FROM Review WHERE user_id = :userId", nativeQuery = true)
     Set<Review> findByUser(@Param("userId") long userId);
-
-    Optional<Review> findById(ReviewId id);
 }
