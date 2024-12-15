@@ -23,6 +23,6 @@ public class Image {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
-    @JsonIncludeProperties(value = {"id", "name"})
+    // @JsonIncludeProperties(value = {"id", "name"})
     private Article article;
 }
