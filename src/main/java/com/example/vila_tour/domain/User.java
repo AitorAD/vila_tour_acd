@@ -41,18 +41,22 @@ public class User {
         this.password = password;
     }
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     @JsonIncludeProperties(value = {"id", "name"})
     private List<Recipe> createdRecipes;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     @JsonIncludeProperties(value = {"id", "name"})
     private List<Festival> createdFestivals;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     @JsonIncludeProperties(value = {"id", "name"})
     private List<Place> createdPlaces;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
