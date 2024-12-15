@@ -29,7 +29,7 @@ public class Festival extends Article {
 
     @ManyToOne
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
-    @JsonIgnoreProperties("createdFestivals")
+    @JsonIgnoreProperties({"createdFestivals", "createdRecipes", "createdPlaces"})
     private User creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
