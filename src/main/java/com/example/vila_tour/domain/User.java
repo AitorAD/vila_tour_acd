@@ -1,6 +1,8 @@
 package com.example.vila_tour.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,14 +35,35 @@ public class User {
     @Column(name = "profilePicture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
-    /*
-    @OneToMany(mappedBy = "creator")
-    private List<Article> createdArticles;
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
-     */
+    @JsonIgnore
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
+    private List<Recipe> createdRecipes;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
+    private List<Festival> createdFestivals;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIncludeProperties(value = {"id", "name"})
+    private List<Place> createdPlaces;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    public User(String username, String encode) {
+        this.username = username;
+        this.password = encode;
+    }
 
     @Override
     public String toString(){

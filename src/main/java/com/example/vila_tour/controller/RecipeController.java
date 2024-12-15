@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Listado de recetas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Recipe>> getRecipes() {
         Set<Recipe> recipes = recipeService.findAllRecipes();
         return new ResponseEntity<>(recipes, HttpStatus.OK);
@@ -56,6 +58,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{idRecipe}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Recipe> getRecipe(@PathVariable("idRecipe") long idRecipe) {
         Recipe recipe = recipeService.findRecipeById(idRecipe)
                 .orElseThrow(() -> new RecipeNotFoundException(idRecipe));
@@ -67,6 +70,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas recientes",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/recent", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Recipe> getAllByRecent(@RequestParam boolean recent) {
         return recipeService.findAllByRecent(recent);
     }
@@ -76,6 +80,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas ordenadas por nombre",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/sorted", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Recipe> getRecipesSortedByName() {
         return recipeService.findAllByOrderByName();
     }
@@ -85,6 +90,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas ordenadas por nombre en orden inverso",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/sortedInverse", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Recipe> getRecipesSortedByNameReversed() {
         return recipeService.findAllByOrderByNameDesc();
     }
@@ -94,6 +100,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Recipe> searchRecipesByNameAndScore(@RequestParam String name, @RequestParam double score) {
         return recipeService.findByNameAndAverageScore(name, score);
     }
@@ -103,6 +110,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search/name", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public Set<Recipe> searchRecipesByNameContaining(@RequestParam String name) {
         return recipeService.findByNameContaining(name);
     }
@@ -112,6 +120,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search/description", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Recipe>> findRecipesByDescription(@RequestParam String description) {
         Set<Recipe> recipes = recipeService.findRecipesByDescription(description);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
@@ -122,6 +131,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search/score", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Recipe>> findRecipesByAverageScore(@RequestParam double averageScore) {
         Set<Recipe> recipes = recipeService.findRecipesByAverageScore(averageScore);
         return new ResponseEntity<>(recipes, HttpStatus.OK);
@@ -132,6 +142,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
     @GetMapping(value = "/search/ingredient", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Recipe>> findRecipesByIngredient(@RequestParam long ingredientId) {
         Ingredient ingredient = ingredientService.findIngredientById(ingredientId)
                 .orElseThrow(() -> new RecipeNotFoundException(ingredientId));
@@ -144,6 +155,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "201", description = "Receta agregada",
                     content = @Content(schema = @Schema(implementation = Recipe.class)))})
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         recipe.setCreationDate(LocalDateTime.now());
         recipe.setLastModificationDate(LocalDateTime.now());
@@ -159,6 +171,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @PutMapping(value = "/{idRecipe}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Recipe> modifyRecipe(@PathVariable("idRecipe") long idRecipe, @RequestBody Recipe newRecipe) {
         newRecipe.setLastModificationDate(LocalDateTime.now());
 
@@ -173,6 +186,7 @@ public class RecipeController {
             @ApiResponse(responseCode = "404", description = "La receta no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @DeleteMapping(value = "/{idRecipe}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Response> deleteRecipe(@PathVariable("idRecipe") long idRecipe) {
         recipeService.deleteRecipe(idRecipe);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

@@ -1,8 +1,9 @@
 package com.example.vila_tour.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +27,14 @@ public class Festival extends Article {
     @Column
     private LocalDate endDate;
 
-    @Schema(description = "Coordenadas del lugar", example = "0,0")
-    @Column
-    private Coordinade coordinade;
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties({"createdFestivals", "createdRecipes", "createdPlaces"})
+    private User creator;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coordinate_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "place", "festivals"})
+    private Coordinate coordinate;
+
 }

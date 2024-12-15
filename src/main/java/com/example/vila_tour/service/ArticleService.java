@@ -8,5 +8,6 @@ import java.util.Set;
 public interface ArticleService {
     Set<Article> findAllArticles();
     Optional<Article> findArticleById(long idArticle);
+    void recalculateAverageScore(Long articleId);
     void deleteArticle(long idArticle);
 }

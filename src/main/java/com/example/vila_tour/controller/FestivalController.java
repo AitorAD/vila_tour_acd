@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -54,6 +55,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Festival> getFestival(@PathVariable long id){
         Festival festival = festivalService.findFestivalById(id)
                 .orElseThrow(() -> new FestivalNotFoundException(id));
@@ -68,6 +70,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/description", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> findFestivalsByDescription(@RequestParam String description) {
         Set<Festival> festivals = festivalService.findFestivalsByDescription(description);
         return new ResponseEntity<>(festivals, HttpStatus.OK);
@@ -80,6 +83,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/score", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> findFestivalsByAverageScore(@RequestParam double averageScore) {
         Set<Festival> festivals = festivalService.findFestivalsByAverageScore(averageScore);
         return new ResponseEntity<>(festivals, HttpStatus.OK);
@@ -92,6 +96,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/startDate", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> findFestivalsByStartDate(@RequestParam String startDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate parsedStartDate = LocalDate.parse(startDate, formatter);
@@ -106,6 +111,7 @@ public class FestivalController {
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
     @GetMapping(value = "/sorted", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> getFestivalsSortedByName() {
         Set<Festival> festivals;
         festivals = festivalService.findAllByOrderByName();
@@ -119,6 +125,7 @@ public class FestivalController {
                     description = "Listado de festivales",
                     content = @Content(array = @ArraySchema(schema =  @Schema(implementation = Festival.class))))})
     @GetMapping(value = "/sortedInverse", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> getFestivalsSortedByNameInverse() {
         Set<Festival> festivals;
         festivals = festivalService.findAllByOrderByNameDesc();
@@ -132,6 +139,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/name_score", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> getFestivalsByNameAndAverageScore(
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "averageScore", defaultValue = "-1") double averageScore) {
@@ -148,6 +156,7 @@ public class FestivalController {
             @ApiResponse(responseCode = "404", description = "El festival no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/search/name", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Festival>> getFestivalsByNameContaining(
             @RequestParam(value = "name", defaultValue = "") String name) {
 
@@ -164,6 +173,7 @@ public class FestivalController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PostMapping(value = "", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Festival> addFestival(@RequestBody Festival festival){
         festival.setCreationDate(LocalDateTime.now());
         festival.setLastModificationDate(LocalDateTime.now());
@@ -182,6 +192,7 @@ public class FestivalController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Festival> modifyFestival(@PathVariable long id, @RequestBody Festival newFestival){
         newFestival.setLastModificationDate(LocalDateTime.now());
 
@@ -197,6 +208,7 @@ public class FestivalController {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping(value = "/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deleteFestival(@PathVariable long id){
         festivalService.deleteFestival(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);

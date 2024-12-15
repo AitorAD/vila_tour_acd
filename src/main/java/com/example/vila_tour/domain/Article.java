@@ -1,6 +1,11 @@
 package com.example.vila_tour.domain;
 
+import com.example.vila_tour.domain.deserializer.ArticleDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,6 +22,17 @@ import java.util.List;
  * @author TeamAjo
  * @version Curso 2024-2025
  */
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Festival.class, name = "festival"),
+        @JsonSubTypes.Type(value = Recipe.class, name = "recipe"),
+        @JsonSubTypes.Type(value = Place.class, name = "place")
+})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,9 +49,6 @@ public abstract class Article {
     @Schema(description = "Descripcion del articulo", example = "La mejor receta")
     @Column(length = 4000)
     private String description;
-    @Schema(description = "Imagen en base64", example = "[https://imagen1.es]")
-    @Column(length = Integer.MAX_VALUE) // Marco el length para que en la bd el campo se almacene como long text
-    private String imagensPaths;
     @Schema(description = "Puntuacion media del articulo", example = "4,5", defaultValue = "0.00")
     @Column
     private double averageScore;
@@ -49,10 +62,29 @@ public abstract class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    /*
-    @ManyToOne
-    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
-    private User creator;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Image> images;
 
-     */
+    // Método para recalcular y actualizar la puntuación media
+    public void updateAverageScore() {
+        if (reviews == null || reviews.isEmpty()) {
+            this.averageScore = 0.0;
+        } else {
+            double total = 0;
+            for (Review review: reviews) {
+                total += review.getRating();
+            }
+            double media = total/(reviews.size());
+
+            this.averageScore = media;
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void onPrePersistOrUpdate() {
+        updateAverageScore();
+        this.lastModificationDate = LocalDateTime.now(); // Actualiza la fecha de modificación
+    }
 }
