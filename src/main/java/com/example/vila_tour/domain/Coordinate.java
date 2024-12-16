@@ -29,7 +29,7 @@ public class Coordinate {
     @Column
     private Double longitude;
 
-    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.MERGE)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Place place;
