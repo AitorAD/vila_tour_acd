@@ -21,8 +21,8 @@ public class Image {
     @Column(length = Integer.MAX_VALUE) // Marco el length para que en la bd el campo se almacene como long text
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false)
-    // @JsonIncludeProperties(value = {"id", "name"})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "article_id")
+    @JsonIgnore
     private Article article;
 }
