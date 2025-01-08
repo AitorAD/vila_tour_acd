@@ -47,7 +47,6 @@ public class RouteController {
                     description = "Listado de rutas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Route.class))))})
     @GetMapping(value = "", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<List<Route>> getRoutes() {
         List<Route> routes = routeService.findAll();
         return new ResponseEntity<>(routes, HttpStatus.OK);
@@ -60,7 +59,6 @@ public class RouteController {
             @ApiResponse(responseCode = "404", description = "Ruta no encontrada",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @GetMapping(value = "/{id}", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Route> getRoute(@PathVariable long id, Authentication authentication) {
         Route route = routeService.findById(id)
                 .orElseThrow(() -> new RouteNotFoundException("Ruta no encontrada con ID: " + id));
@@ -72,7 +70,6 @@ public class RouteController {
             @ApiResponse(responseCode = "200", description = "Listado de rutas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Route.class))))})
     @GetMapping(value = "/search", produces = "application/json")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<List <Route>> getRoutesByName(@RequestParam("name") String name) {
         List<Route> routes = routeService.findByNameContaining(name);
         return new ResponseEntity<>(routes, HttpStatus.OK);
@@ -87,7 +84,7 @@ public class RouteController {
             @ApiResponse(responseCode = "400", description = "Solicitud no válida, la ruta no pudo añadirse",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @PostMapping("")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Route> addRoute(@RequestBody Route route) {
         Route addedRoute = routeService.addRoute(route);
         return new ResponseEntity<>(addedRoute, HttpStatus.OK);
@@ -102,7 +99,7 @@ public class RouteController {
             @ApiResponse(responseCode = "400", description = "Solicitud no válida",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Route> modifyRoute(@PathVariable long id, @RequestBody Route route) {
         Route updatedRoute = routeService.modifyRoute(id, route);
         return new ResponseEntity<>(updatedRoute, HttpStatus.OK);
@@ -115,7 +112,7 @@ public class RouteController {
             @ApiResponse(responseCode = "404", description = "Ruta no encontrada",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Response> deleteRoute(@PathVariable long id) {
         routeService.deleteRoute(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
