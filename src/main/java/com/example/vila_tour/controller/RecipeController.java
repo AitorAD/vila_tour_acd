@@ -1,5 +1,6 @@
 package com.example.vila_tour.controller;
 
+import com.example.vila_tour.domain.Image;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
 import com.example.vila_tour.exception.RecipeNotFoundException;
@@ -159,6 +160,8 @@ public class RecipeController {
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {
         recipe.setCreationDate(LocalDateTime.now());
         recipe.setLastModificationDate(LocalDateTime.now());
+
+        if (recipe.getImages() != null) recipe.getImages().forEach(image -> image.setArticle(recipe));
 
         Recipe addedRecipe = recipeService.addRecipe(recipe);
         return new ResponseEntity<>(addedRecipe, HttpStatus.CREATED);
