@@ -18,7 +18,7 @@ import java.util.List;
 @Entity(name = "places")
 public class Place extends Article {
 
-   @Schema(description = "Categoría a la que pertenece el ingredeitne", example = "Monumento Histórico")
+   @Schema(description = "Categoría a la que pertenece el lugar", example = "Monumento Histórico")
    @ManyToOne(fetch = FetchType.EAGER)
    @JoinColumn(name = "category_id")
    private CategoryPlace categoryPlace;
@@ -31,4 +31,8 @@ public class Place extends Article {
    @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "coordinate_id", referencedColumnName = "id")
    private Coordinate coordinate;
+
+   @ManyToMany(cascade = CascadeType.DETACH, mappedBy = "places")
+   @JsonIgnore
+   private List<Route> routes;
 }
