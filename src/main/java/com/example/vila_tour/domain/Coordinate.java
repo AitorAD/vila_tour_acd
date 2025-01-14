@@ -29,12 +29,12 @@ public class Coordinate {
     @Column
     private Double longitude;
 
-    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.MERGE)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Place place;
 
-    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Festival> festivals;
