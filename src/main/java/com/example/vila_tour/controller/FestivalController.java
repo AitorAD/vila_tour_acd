@@ -178,6 +178,8 @@ public class FestivalController {
         festival.setCreationDate(LocalDateTime.now());
         festival.setLastModificationDate(LocalDateTime.now());
 
+        if (festival.getImages() != null) festival.getImages().forEach(image -> image.setArticle(festival));
+
         Festival addedFestival = festivalService.addFestival(festival);
         return new ResponseEntity<>(addedFestival, HttpStatus.OK);
     }
@@ -195,6 +197,20 @@ public class FestivalController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Festival> modifyFestival(@PathVariable long id, @RequestBody Festival newFestival){
         newFestival.setLastModificationDate(LocalDateTime.now());
+
+        // Obtener el festival actual y sus imágenes
+        Festival existingFestival = festivalService.findFestivalById(id)
+                .orElseThrow(() -> new FestivalNotFoundException(id));
+
+        // Mantener las imágenes del festival existente
+        if (existingFestival.getImages() != null && !existingFestival.getImages().isEmpty()) {
+            newFestival.getImages().addAll(existingFestival.getImages()); // Se agregan las imágenes existentes
+        }
+
+        // Si el nuevo festival tiene imágenes, se asignan
+        if (newFestival.getImages() != null) {
+            newFestival.getImages().forEach(image -> image.setArticle(newFestival));
+        }
 
         Festival festival = festivalService.modifyFestival(id, newFestival);
         return new ResponseEntity<>(newFestival,HttpStatus.OK);

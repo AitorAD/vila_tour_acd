@@ -51,4 +51,9 @@ public class ImageServiceImpl implements ImageService {
                 .orElseThrow(() -> new ImageNotFoundException(id));
         imageRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteAllByFestival(long id) {
+        // TODO
+    }
 }

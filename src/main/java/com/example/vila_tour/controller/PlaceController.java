@@ -135,6 +135,8 @@ public class PlaceController {
         place.setCreationDate(LocalDateTime.now());
         place.setLastModificationDate(LocalDateTime.now());
 
+        if (place.getImages() != null) place.getImages().forEach(image -> image.setArticle(place));
+
         Place addedPlace = placeService.addPlace(place);
         return new ResponseEntity<>(addedPlace, HttpStatus.CREATED);
     }
