@@ -28,7 +28,7 @@ public class Place extends Article {
    @JsonIgnoreProperties("createdPlaces")
    private User creator;
 
-   @OneToOne(cascade = CascadeType.ALL)
+   @OneToOne(cascade = CascadeType.MERGE)
    @JoinColumn(name = "coordinate_id", referencedColumnName = "id")
    private Coordinate coordinate;
 
