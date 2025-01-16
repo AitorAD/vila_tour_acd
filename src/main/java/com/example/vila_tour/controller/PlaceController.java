@@ -3,6 +3,7 @@ package com.example.vila_tour.controller;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Place;
 import com.example.vila_tour.domain.Recipe;
+import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.exception.PlaceNotFoundException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.service.PlaceService;
@@ -135,6 +136,8 @@ public class PlaceController {
         place.setCreationDate(LocalDateTime.now());
         place.setLastModificationDate(LocalDateTime.now());
 
+        if (place.getImages() != null) place.getImages().forEach(image -> image.setArticle(place));
+
         Place addedPlace = placeService.addPlace(place);
         return new ResponseEntity<>(addedPlace, HttpStatus.CREATED);
     }
@@ -149,6 +152,20 @@ public class PlaceController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
     public ResponseEntity<Place> modifyPlace(@PathVariable("idPlace") long idPlace, @RequestBody Place newPlace) {
         newPlace.setLastModificationDate(LocalDateTime.now());
+
+        // Obtener la receta actual y sus imágenes
+        Place existingPlace = placeService.findPlaceById(idPlace)
+                .orElseThrow(() -> new FestivalNotFoundException(idPlace));
+
+        // Mantener las imágenes de la receta existente
+        if (existingPlace.getImages() != null && !existingPlace.getImages().isEmpty()) {
+            newPlace.getImages().addAll(existingPlace.getImages()); // Se agregan las imágenes existentes
+        }
+
+        // Si la nueva receta tiene imágenes, se asignan
+        if (newPlace.getImages() != null) {
+            newPlace.getImages().forEach(image -> image.setArticle(newPlace));
+        }
 
         Place place = placeService.modifyPlace(idPlace, newPlace);
         return new ResponseEntity<>(place, HttpStatus.OK);

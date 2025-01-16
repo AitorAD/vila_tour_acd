@@ -20,7 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -116,6 +117,28 @@ public class ImageController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Response> deleteImage(@PathVariable("id") long idImage) {
         imageService.deleteImage(idImage);
+        return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Elimina todas las imagenes pertenecientes a un articulo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Imagen eliminada",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "404", description = "La imagen no existe",
+                    content = @Content(schema = @Schema(implementation = Response.class)))})
+    @DeleteMapping(value = "/deleteAllByArticle/{id}", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
+    public ResponseEntity<Response> deleteAllByArticle(@PathVariable("id") long idArticle) {
+        Optional<Article> article = articleService.findArticleById(idArticle);
+
+        // Validar si el artículo existe
+        if (article.isEmpty()) {
+            throw new IllegalArgumentException("El artículo con ID " + idArticle + " no existe");
+        }
+
+        // Eliminar todas las imágenes asociadas
+        imageService.deleteAllByArticle(article.get());
+
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 

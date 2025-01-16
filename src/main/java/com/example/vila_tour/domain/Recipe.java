@@ -3,10 +3,7 @@ package com.example.vila_tour.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity(name = "recipes")
 public class Recipe extends Article {
 
@@ -42,4 +40,6 @@ public class Recipe extends Article {
     @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
     @JsonIgnoreProperties("createdRecipes")
     private User creator;
+
+
 }
