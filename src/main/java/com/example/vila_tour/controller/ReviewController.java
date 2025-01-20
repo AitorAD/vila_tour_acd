@@ -112,8 +112,8 @@ public class ReviewController {
     @PostMapping(value = "", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Review> addReview(
-            @RequestParam("id_user") Long idUser,
-            @RequestParam("id_article") Long idArticle,
+            @RequestParam("user_id") Long idUser,
+            @RequestParam("article_id") Long idArticle,
             @RequestBody Review review
     ) {
         // Configurar los IDs en la reseña

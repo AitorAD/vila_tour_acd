@@ -15,4 +15,5 @@ public interface ImageService {
     Image addImage(Image image);
     Image modifyImage(long id, Image newImage);
     void deleteImage(long id);
+    void deleteAllByArticle(Article article);
 }

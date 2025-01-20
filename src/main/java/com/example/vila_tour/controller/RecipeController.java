@@ -1,8 +1,10 @@
 package com.example.vila_tour.controller;
 
+import com.example.vila_tour.domain.Festival;
 import com.example.vila_tour.domain.Image;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
+import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.service.RecipeService;
 import com.example.vila_tour.service.IngredientService; // Asegúrate de importar el servicio
@@ -177,6 +179,20 @@ public class RecipeController {
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Recipe> modifyRecipe(@PathVariable("idRecipe") long idRecipe, @RequestBody Recipe newRecipe) {
         newRecipe.setLastModificationDate(LocalDateTime.now());
+
+        // Obtener la receta actual y sus imágenes
+        Recipe existingRecipe = recipeService.findRecipeById(idRecipe)
+                .orElseThrow(() -> new FestivalNotFoundException(idRecipe));
+
+        // Mantener las imágenes de la receta existente
+        if (existingRecipe.getImages() != null && !existingRecipe.getImages().isEmpty()) {
+            newRecipe.getImages().addAll(existingRecipe.getImages()); // Se agregan las imágenes existentes
+        }
+
+        // Si la nueva receta tiene imágenes, se asignan
+        if (newRecipe.getImages() != null) {
+            newRecipe.getImages().forEach(image -> image.setArticle(newRecipe));
+        }
 
         Recipe recipe = recipeService.modifyRecipe(idRecipe, newRecipe);
         return new ResponseEntity<>(recipe, HttpStatus.OK);

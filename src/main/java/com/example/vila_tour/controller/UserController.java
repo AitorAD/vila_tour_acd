@@ -82,6 +82,22 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @Operation(summary = "Obtiene el nombre de usuario y foto de un usuario determinado por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Existe el usuario",
+                    content = @Content(schema =  @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "El usuario no existe",
+                    content = @Content(schema = @Schema(implementation = Response.class)))})
+    @GetMapping(value = "/basic/{id}", produces = "application/json")
+    public ResponseEntity<User> getBasicUser(@PathVariable long id) {
+        // Recuperar y devolver el usuario
+        User user = userService.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + id));
+        User basicUser = new User();
+        basicUser.setUsername(user.getUsername());
+        basicUser.setProfilePicture(user.getProfilePicture());
+        return ResponseEntity.ok(basicUser);
+    }
 
     @Operation(summary = "Obtiene los usuarios por username que contengan el texto de la búsqueda")
     @ApiResponses(value = {

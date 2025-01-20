@@ -70,8 +70,9 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ArticleNotFoundException("Articulo no encontrado"));
         review.setUser(user);
         review.setArticle(article);
+        Review r = reviewRepository.save(review);
         articleService.recalculateAverageScore(article.getId());
-        return reviewRepository.save(review);
+        return r;
     }
 
     @Transactional
