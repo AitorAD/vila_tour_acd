@@ -1,6 +1,7 @@
 package com.example.vila_tour.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,12 +30,13 @@ public class Coordinate {
     @Column
     private Double longitude;
 
-    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.MERGE)
+    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.ALL)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Place place;
 
-    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+
+    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Festival> festivals;

@@ -13,6 +13,7 @@ import java.util.List;
  * @version Curso 2024-2025
  */
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
