@@ -30,13 +30,13 @@ public class Coordinate {
     @Column
     private Double longitude;
 
-    @OneToOne(mappedBy = "coordinate", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private Place place;
 
 
-    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "coordinate", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Festival> festivals;

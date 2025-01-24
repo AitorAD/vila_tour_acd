@@ -2,7 +2,9 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Festival;
+import com.example.vila_tour.domain.Recipe;
 import com.example.vila_tour.exception.FestivalNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.FestivalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -182,6 +186,39 @@ public class FestivalController {
 
         Festival addedFestival = festivalService.addFestival(festival);
         return new ResponseEntity<>(addedFestival, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Añade nuevas categorías")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categorías añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, las categorías no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addRecipes(@RequestBody List<Festival> festivals) {
+        try {
+            List<Festival> addedFestivals = new ArrayList<>();
+
+            for (Festival festival : festivals) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    Festival addedFestival = festivalService.addFestival(festival);
+                    addedFestivals.add(addedFestival);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Modifica un festival existente")

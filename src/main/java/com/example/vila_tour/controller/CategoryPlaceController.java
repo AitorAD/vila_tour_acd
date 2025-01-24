@@ -3,6 +3,7 @@ package com.example.vila_tour.controller;
 import com.example.vila_tour.domain.*;
 import com.example.vila_tour.exception.CategoryPlaceAlreadyExist;
 import com.example.vila_tour.exception.CategoryPlaceNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.CategoryPlaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -78,6 +81,39 @@ public class CategoryPlaceController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         } catch (Exception ex){
             Response errorResponse = Response.errorResponse(500, "Internal Server Error");
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "Añade nuevas categorías")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categorías añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, las categorías no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addCategories(@RequestBody List<CategoryPlace> categories) {
+        try {
+            List<CategoryPlace> addedCategories = new ArrayList<>();
+
+            for (CategoryPlace category : categories) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    CategoryPlace addedCategory = categoryPlaceService.addCategoryPlace(category);
+                    addedCategories.add(addedCategory);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

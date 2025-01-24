@@ -67,7 +67,7 @@ public class PlaceServiceImpl implements PlaceService{
 
     @Override
     public void deletePlace(long id){
-        Place place = placeRepository.findById(id)
+        placeRepository.findById(id)
                 .orElseThrow(()-> new PlaceNotFoundException(id));
         placeRepository.deleteById(id);
     }

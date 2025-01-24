@@ -5,6 +5,7 @@ import com.example.vila_tour.domain.Image;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Recipe;
 import com.example.vila_tour.exception.FestivalNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.service.RecipeService;
 import com.example.vila_tour.service.IngredientService; // Asegúrate de importar el servicio
@@ -22,7 +23,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -167,6 +170,39 @@ public class RecipeController {
 
         Recipe addedRecipe = recipeService.addRecipe(recipe);
         return new ResponseEntity<>(addedRecipe, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Añade nuevas categorías")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categorías añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, las categorías no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addRecipes(@RequestBody List<Recipe> recipes) {
+        try {
+            List<Recipe> addedRecipes = new ArrayList<>();
+
+            for (Recipe recipe : recipes) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    Recipe addedRecipe = recipeService.addRecipe(recipe);
+                    addedRecipes.add(addedRecipe);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Operation(summary = "Modifica una receta existente")

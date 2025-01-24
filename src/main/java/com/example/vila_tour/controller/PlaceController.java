@@ -1,9 +1,11 @@
 package com.example.vila_tour.controller;
 
+import com.example.vila_tour.domain.Coordinate;
 import com.example.vila_tour.domain.Ingredient;
 import com.example.vila_tour.domain.Place;
 import com.example.vila_tour.domain.Recipe;
 import com.example.vila_tour.exception.FestivalNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.exception.PlaceNotFoundException;
 import com.example.vila_tour.exception.RecipeNotFoundException;
 import com.example.vila_tour.service.PlaceService;
@@ -21,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -142,6 +146,39 @@ public class PlaceController {
         return new ResponseEntity<>(addedPlace, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Añade nuevos lugares")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Lugares añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, los lugares no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addPlaces(@RequestBody List<Place> places) {
+        try {
+            List<Place> addedPlaces = new ArrayList<>();
+
+            for (Place place : places) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    Place addedPlace = placeService.addPlace(place);
+                    addedPlaces.add(addedPlace);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Operation(summary = "Modifica un lugar existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lugar modificado",
@@ -177,10 +214,10 @@ public class PlaceController {
                     content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "404", description = "El lugar no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @DeleteMapping(value = "/{idPlace}", produces = "application/json")
+    @DeleteMapping(value = "/{id}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
-    public ResponseEntity<Response> deletePlace(@PathVariable("idPlace") long idPlace) {
-        placeService.deletePlace(idPlace);
+    public ResponseEntity<Response> deletePlace(@PathVariable long id) {
+        placeService.deletePlace(id);
         return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.OK);
     }
 
