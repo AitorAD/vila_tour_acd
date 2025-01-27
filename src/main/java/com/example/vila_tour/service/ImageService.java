@@ -11,7 +11,8 @@ import java.util.Set;
 public interface ImageService {
     Set<Image> findAll();
     Optional<Image> findById(long id);
-    Set<Image> findByArticle(Article article);
+    Set<Image> findImagesByArticle(Article article);
+    Image findImageByArticle(Article article);
     Image addImage(Image image);
     Image modifyImage(long id, Image newImage);
     void deleteImage(long id);

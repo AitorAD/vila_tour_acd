@@ -10,5 +10,6 @@ import java.util.Set;
 public interface ImageRepository extends CrudRepository<Image, Long> {
     Set<Image> findAll();
     Optional<Image> findById(long id);
-    Set<Image> findByArticle(Article article);
+    Set<Image> findImagesByArticle(Article article);
+    Image findOneImageByArticle(Article article);
 }

@@ -7,7 +7,6 @@ import com.example.vila_tour.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,8 +27,14 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Set<Image> findByArticle(Article article) {
-        return imageRepository.findByArticle(article);
+    public Set<Image> findImagesByArticle(Article article) {
+        return imageRepository.findImagesByArticle(article);
+    }
+
+    @Override
+    public Image findImageByArticle(Article article) {
+        // return imageRepository.findOneImageByArticle(article);
+        return imageRepository.findImagesByArticle(article).stream().toList().get(0);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void deleteAllByArticle(Article article) {
         // TODO: Manejar esto mediante el repository
-        Set<Image> imagesToRemove = findByArticle(article);
+        Set<Image> imagesToRemove = findImagesByArticle(article);
         imagesToRemove.forEach(image -> deleteImage(image.getId()));
     }
 }

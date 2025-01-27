@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 
@@ -74,13 +73,26 @@ public class ImageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Imagenes encontradas",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Image.class))))})
-    @GetMapping(value = "/byArticle/{idArticle}", produces = "application/json")
+    @GetMapping(value = "/getImagesByArticle/{idArticle}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Set<Image>> findImagesByArticle(@PathVariable long idArticle) {
         Article article = articleService.findArticleById(idArticle)
                 .orElseThrow(() -> new ArticleNotFoundException(idArticle));
-        Set<Image> images = imageService.findByArticle(article);
+        Set<Image> images = imageService.findImagesByArticle(article);
         return new ResponseEntity<>(images, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Busca la primera imagen que contiene un articulo específico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Imagen encontradas",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Image.class))))})
+    @GetMapping(value = "/getImageByArticle/{idArticle}", produces = "application/json")
+    public ResponseEntity<Image> findImageByArticle(@PathVariable long idArticle) {
+        Article article = articleService.findArticleById(idArticle)
+                .orElseThrow(() -> new ArticleNotFoundException(idArticle));
+
+        Image image = imageService.findImageByArticle(article);
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     @Operation(summary = "Agrega una nueva imagen")

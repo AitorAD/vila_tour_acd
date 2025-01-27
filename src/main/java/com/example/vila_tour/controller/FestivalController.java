@@ -2,7 +2,6 @@ package com.example.vila_tour.controller;
 
 import com.example.vila_tour.domain.Article;
 import com.example.vila_tour.domain.Festival;
-import com.example.vila_tour.domain.Recipe;
 import com.example.vila_tour.exception.FestivalNotFoundException;
 import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.FestivalService;
@@ -49,7 +48,10 @@ public class FestivalController {
     @GetMapping(value = "", produces = "application/json")
     public ResponseEntity<Set<Festival>> getFestivals() {
         Set<Festival> festivals = festivalService.findAllFestivals();
-        return new ResponseEntity<>(festivals, HttpStatus.OK);
+        System.out.println(LocalDateTime.now().toString());
+        ResponseEntity<Set<Festival>> resp = new ResponseEntity<>(festivals, HttpStatus.OK);
+        System.out.println(LocalDateTime.now().toString());
+        return resp;
     }
 
     @Operation(summary = "Obtiene el festival determinado por id")
