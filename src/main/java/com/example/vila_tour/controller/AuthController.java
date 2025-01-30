@@ -142,9 +142,8 @@ public class AuthController {
 
     @PostMapping("/singout")
     public ResponseEntity<?> logoutUser() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = userDetails.getId();
-        // refreshTokenService.deleteByUserId(userId);
+        SecurityContextHolder.clearContext();  // Limpia la sesión del usuario
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
+
 }
