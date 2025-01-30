@@ -67,12 +67,11 @@ public class AuthController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         String jwt = jwtUtils.generateJwtToken(userDetails);
+        int jwtExpiration = jwtUtils.getJwtExpirationMs();
 
         String role = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0);
 
-        // RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-        return ResponseEntity.ok(new JwtResponse(jwt, /*refreshToken.getToken(),*/ userDetails.getId(),
+        return ResponseEntity.ok(new JwtResponse(jwt, jwtExpiration, userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), role));
     }
 
@@ -143,9 +142,8 @@ public class AuthController {
 
     @PostMapping("/singout")
     public ResponseEntity<?> logoutUser() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = userDetails.getId();
-        // refreshTokenService.deleteByUserId(userId);
+        SecurityContextHolder.clearContext();  // Limpia la sesión del usuario
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
+
 }
