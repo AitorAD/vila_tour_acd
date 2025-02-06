@@ -28,6 +28,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Set<Recipe> findAllByOrderByNameDesc(); // Descendente
 
+    Set<Recipe> findRecipesByCreatorId(long creatorId);
+
     // Buscar por nombre y puntuación
     Set<Recipe> findByNameAndAverageScore(String name, double averageScore);
 

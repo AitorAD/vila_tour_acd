@@ -143,6 +143,17 @@ public class RecipeController {
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
+    @Operation(summary = "Busca las recetas que ha creado un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recetas encontradas",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Recipe.class))))})
+    @GetMapping(value = "/search/creatorId", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
+    public ResponseEntity<Set<Recipe>> findRecipesByCreatorId(@RequestParam long creatorId) {
+        Set<Recipe> recipes = recipeService.findRecipesByCreatorId(creatorId);
+        return new ResponseEntity<>(recipes, HttpStatus.OK);
+    }
+
     @Operation(summary = "Busca recetas que contienen un ingrediente específico")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recetas encontradas",
