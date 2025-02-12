@@ -135,6 +135,7 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: El usuario no existe.");
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al recuperar la contraseña: " + ex.getMessage());
         }
