@@ -72,6 +72,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Set<Recipe> findRecipesByCreatorId(long creatorId) {
+        return recipeRepository.findRecipesByCreatorId(creatorId);
+    }
+
+    @Override
     public Recipe addRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);
     }

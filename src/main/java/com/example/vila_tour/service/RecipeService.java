@@ -19,6 +19,7 @@ public interface RecipeService {
     Set<Recipe> findAllByOrderByNameDesc(); // Descendente
     Set<Recipe> findByNameAndAverageScore(String name, double averageScore);
     Set<Recipe> findByNameContaining(String name);
+    Set<Recipe> findRecipesByCreatorId(long creatorId);
     Recipe addRecipe(Recipe recipe); // Agrega una nueva receta.
     Recipe modifyRecipe(long id, Recipe newRecipe); // Modifica una receta existente.
     void deleteRecipe(long id); // Elimina una receta por su ID.

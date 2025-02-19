@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -112,7 +114,38 @@ public class IngredientController {
         }
     }
 
+    @Operation(summary = "Añade nuevas categorías")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Categorías añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, las categorías no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addIngredients(@RequestBody List<Ingredient> ingredients) {
+        try {
+            List<Ingredient> addedIngredients = new ArrayList<>();
 
+            for (Ingredient ingredient : ingredients) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    Ingredient addedIngredient = ingredientService.addIngredient(ingredient);
+                    addedIngredients.add(addedIngredient);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @Operation(summary = "Modifica un ingrediente existente")
     @ApiResponses(value = {

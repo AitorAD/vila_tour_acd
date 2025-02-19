@@ -6,15 +6,15 @@ import lombok.Data;
 public class JwtResponse {
   private String token;
   private String type = "Bearer";
-  // private String refreshToken;
+  private int expiration;
   private Long id;
   private String username;
   private String email;
   private String role;
 
-  public JwtResponse(String accessToken, /*String refreshToken,*/ Long id, String username, String email, String role) {
+  public JwtResponse(String accessToken, int expiration, Long id, String username, String email, String role) {
     this.token = accessToken;
-    // this.refreshToken = refreshToken;
+    this.expiration = expiration;
     this.id = id;
     this.username = username;
     this.email = email;

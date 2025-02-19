@@ -19,8 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.events.Event;
 
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,6 +94,20 @@ public class ImageController {
         return new ResponseEntity<>(addedImage, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Unir una imagen a un articulo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Imagen agregada",
+                    content = @Content(schema = @Schema(implementation = Image.class)))})
+    @PostMapping(value = "withArticle", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
+    public ResponseEntity<Image> addImage(@RequestBody Image image, @RequestParam("id_article") long idArticle) {
+        Article article = articleService.findArticleById(idArticle).orElseThrow(() -> new ArticleNotFoundException(idArticle));
+        image.setArticle(article);
+        Image addedImage = imageService.addImage(image);
+        return new ResponseEntity<>(addedImage, HttpStatus.CREATED);
+    }
+
+
     @Operation(summary = "Modifica una imagen existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Imagen modificada",
@@ -106,6 +120,7 @@ public class ImageController {
         Image image = imageService.modifyImage(idImage, newImage);
         return new ResponseEntity<>(image, HttpStatus.OK);
     }
+
 
     @Operation(summary = "Elimina una imagen por ID")
     @ApiResponses(value = {

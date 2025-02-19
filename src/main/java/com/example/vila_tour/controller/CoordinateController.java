@@ -1,7 +1,9 @@
 package com.example.vila_tour.controller;
 
+import com.example.vila_tour.domain.CategoryPlace;
 import com.example.vila_tour.domain.Coordinate;
 import com.example.vila_tour.exception.CoordinateNotFoundException;
+import com.example.vila_tour.exception.IngredientAlreadyExistsException;
 import com.example.vila_tour.service.CoordinateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,8 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static com.example.vila_tour.controller.Response.NOT_FOUND;
@@ -90,6 +95,39 @@ public class CoordinateController {
             return new ResponseEntity<>(coordinate, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(summary = "Añade nuevas coordenadas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Coordenadas añadidas exitosamente",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud no válida, las coordenadas no pudieron añadirse",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
+    })
+    @PostMapping(value = "/bulk", produces = "application/json")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR')")
+    public ResponseEntity<Response> addCoordinates(@RequestBody List<Coordinate> coordinates) {
+        try {
+            List<Coordinate> addedCoordinates = new ArrayList<>();
+
+            for (Coordinate coordinate : coordinates) {
+                try {
+                    // Llama al servicio para agregar cada categoría
+                    Coordinate addedCoordinate = coordinateService.addCoordinate(coordinate);
+                    addedCoordinates.add(addedCoordinate);
+                } catch (IngredientAlreadyExistsException ex) {
+                    // Si una categoría ya existe, registra el error, pero no detengas el proceso
+                    // Puedes optar por manejar esto de otra manera, por ejemplo, agregando un registro a un log
+                }
+            }
+
+            // Respuesta exitosa con la lista de categorías añadidas
+            return new ResponseEntity<>(Response.noErrorResponse(), HttpStatus.CREATED);
+        } catch (Exception ex) {
+            // Respuesta en caso de error general
+            Response errorResponse = Response.errorResponse(500, "Internal Server Error: " + ex.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

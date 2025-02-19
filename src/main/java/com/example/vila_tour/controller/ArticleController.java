@@ -101,7 +101,7 @@ public class ArticleController {
                     content = @Content(schema = @Schema(implementation = Article.class))),
             @ApiResponse(responseCode = "404", description = "El articulo no existe",
                     content = @Content(schema = @Schema(implementation = Response.class)))})
-    @GetMapping(value = "/{idRecipe}", produces = "application/json")
+    @GetMapping(value = "/{idArticle}", produces = "application/json")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('EDITOR') or hasAuthority('USER')")
     public ResponseEntity<Article> getArticle(@PathVariable("idArticle") long idArticle) {
         Article article = articleService.findArticleById(idArticle)
